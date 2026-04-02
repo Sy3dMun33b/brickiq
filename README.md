@@ -1,6 +1,6 @@
-# Mikhail Builds Website Template for Beginners
+# BrickIQ Landing Page
 
-A modern, beginner-friendly Next.js template designed for rapid web development with Cursor IDE integration.
+A clean, modern landing page for BrickIQ, a UK property investing tool that helps users analyse deals quickly and avoid costly mistakes.
 
 ## Tech Stack
 
@@ -12,16 +12,16 @@ A modern, beginner-friendly Next.js template designed for rapid web development 
 - **Linting**: ESLint with Next.js configuration
 - **Build Tool**: PostCSS with Autoprefixer
 
-## Features
+## What This Page Includes
 
-- **Modern UI Components**: Pre-built Hero component with animated gradient backgrounds
-- **Responsive Design**: Mobile-first approach with Tailwind CSS
-- **TypeScript Support**: Full type checking and IntelliSense
-- **Custom Animations**: Blob animations and smooth transitions
-- **Developer Experience**: Optimized with Turbopack for lightning-fast development
-- **Cursor IDE Integration**: Designed to work seamlessly with Cursor's AI agent
-- **Authentication Ready**: Clerk integration guide included
-- **Backend Ready**: Convex database integration guide included
+- **Hero**: clear value proposition in plain language
+- **Problem**: why current deal analysis is slow and risky
+- **Features**: core product capabilities
+- **How It Works**: simple 3-step flow
+- **Example Deal Output**: practical sample numbers
+- **Testimonials**: trust-building social proof
+- **Pricing**: Starter and Pro plans
+- **Final CTA**: early access conversion section
 
 ## Getting Started
 
@@ -33,63 +33,38 @@ A modern, beginner-friendly Next.js template designed for rapid web development 
 
 ### Installation
 
-1. **Download Cursor IDE**
-   - Visit [cursor.sh](https://cursor.sh/) and download the latest version
-
-2. **Clone the repository**
+1. **Clone the repository**
    ```bash
-   git clone https://github.com/mwijanarko1/template.git
-   cd template
+   git clone <your-repo-url>
+   cd brickiq
    ```
 
-3. **Install dependencies**
+2. **Install dependencies**
    ```bash
    bun install
    ```
 
-4. **Start the development server**
+3. **Start the development server**
    ```bash
    bun run dev
    ```
 
-5. **Open Cursor Composer**
-   - Press `CMD + I` to open the Composer
-   - Make sure to select the "Agent" mode
-
-6. **Use the AI Agent**
-   - Copy the contents of the `docs/PROMPT.txt` file and paste it into the Composer Agent
-   - Let the AI generate your project structure and components
-   - Chat with the agent to build features - it will handle the coding for you
-
-7. **Fix any issues**
-   - If errors occur, copy/paste the error or screenshot it
-   - Ask the agent to fix the specific error
+4. **Open locally**
+   - Visit [http://localhost:3000](http://localhost:3000)
+   - If port 3000 is busy, Next.js will use the next available port (for example 3001)
 
 ## Project Structure
 
 ```
-template/
-├── docs/                       # Documentation and guides
-│   ├── PROMPT.txt             # AI agent prompt instructions
-│   ├── CURSOR_GUIDE.md        # Comprehensive Cursor IDE guide
-│   ├── clerk/                 # Clerk authentication guides
-│   │   └── clerk-auth-guide.md
-│   └── convex/                # Convex database guides
-│       ├── convex-db-guide.md
-│       └── convex_rules.mdc
-├── for-agent/                 # Agent-specific instructions
-│   ├── deployment.txt         # Deployment guidelines
-│   ├── guidelines.txt         # General coding guidelines
-│   ├── modes.txt              # Agent modes and instructions
-│   └── ui-guide.txt           # UI/UX guidelines
+brickiq/
+├── docs/                       # Documentation (ignored in git by default)
+├── for-agent/                  # Agent helper files (ignored in git by default)
 ├── src/                       # Source code
 │   ├── app/
 │   │   ├── layout.tsx         # Root layout component
 │   │   ├── page.tsx           # Home page
 │   │   ├── globals.css        # Global styles
 │   │   └── favicon.ico        # App favicon
-│   └── components/
-│       └── Hero.tsx           # Hero section component
 ├── tailwind.config.js         # Tailwind CSS configuration
 ├── next.config.mjs            # Next.js configuration
 ├── postcss.config.mjs         # PostCSS configuration
@@ -97,26 +72,12 @@ template/
 └── package.json               # Dependencies and scripts
 ```
 
-## Documentation
+## Brand and Design Direction
 
-### Codebase Architecture
-For a comprehensive overview of the codebase structure, architecture diagrams, data flows, and navigation guide, see [`docs/CODEBASE_MAP.md`](docs/CODEBASE_MAP.md).
-
-### Cursor IDE Guide
-Check `docs/CURSOR_GUIDE.md` for detailed instructions on using Cursor IDE effectively with this template.
-
-### Authentication (Clerk)
-The `docs/clerk/` directory contains guides for integrating Clerk authentication into your project.
-
-### Backend/Database (Convex)
-The `docs/convex/` directory contains guides for setting up Convex as your backend and database solution.
-
-### Agent Instructions
-The `for-agent/` directory contains instructions that help the AI agent understand how to work with your project:
-- **deployment.txt**: Deployment best practices
-- **guidelines.txt**: General coding standards
-- **modes.txt**: Different agent modes and when to use them
-- **ui-guide.txt**: UI/UX design guidelines
+- White background, dark text, and subtle neutral accents
+- Minimal and professional UI with strong spacing and typography
+- Practical, human tone (no hype language)
+- In-page anchor links for smooth navigation between sections
 
 ## Testing
 
@@ -127,23 +88,17 @@ bun run test        # Watch mode
 bun run test:run    # Single run
 ```
 
-Tests use Vitest and React Testing Library. Add `*.test.tsx` files next to your components.
+Tests use Vitest and React Testing Library.
 
 ## Environment
 
 Copy `.env.example` to `.env.local` and fill in values. Use `getEnv()` from `src/lib/env.ts` for validated access. Extend the Zod schema when adding Clerk, Convex, or other services.
 
-## Customization
+## Editing the Landing Page
 
-### Styling
-- Modify `tailwind.config.js` to add custom colors, fonts, or animations
-- Update `src/app/globals.css` for global styles
-- Components use Tailwind utility classes for easy customization
-
-### Components
-- Add new components in `src/components/`
-- Import and use them in your pages
-- Follow the existing Hero component pattern
+- Main content sections are in `src/app/page.tsx`
+- Global styles are in `src/app/globals.css`
+- Site metadata (title/description/social tags) is in `src/app/layout.tsx`
 
 ## Deployment
 

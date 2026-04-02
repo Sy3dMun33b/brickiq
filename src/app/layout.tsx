@@ -15,41 +15,47 @@ const geistMono = Geist_Mono({
 });
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#111827" },
-  ],
+  themeColor: "#ffffff",
 };
 
 // Define metadata for better SEO
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"),
-  title: "Next.js Beginner Template",
-  description: "A beginner-friendly Next.js template with TailwindCSS and TypeScript",
-  keywords: ["Next.js", "React", "TailwindCSS", "TypeScript", "Template"],
-  authors: [{ name: "Created with Cursor Agent" }],
-  creator: "Cursor Agent",
-  publisher: "Cursor Agent",
+  title: "BrickIQ | Smarter UK Property Deal Analysis",
+  description:
+    "BrickIQ helps UK property investors analyse Rightmove deals faster with clear numbers on profit, value, risk, and deal score.",
+  keywords: [
+    "BrickIQ",
+    "UK property investing",
+    "Rightmove analysis",
+    "deal analysis",
+    "property investment software",
+  ],
+  authors: [{ name: "BrickIQ" }],
+  creator: "BrickIQ",
+  publisher: "BrickIQ",
   openGraph: {
-    title: "Next.js Beginner Template",
-    description: "A beginner-friendly Next.js template with TailwindCSS and TypeScript",
-    url: "https://nextjs.org/",
-    siteName: "Next.js Beginner Template",
+    title: "BrickIQ | Smarter UK Property Deal Analysis",
+    description:
+      "Paste a Rightmove link and quickly see profit, value, risk, and a simple deal score.",
+    url: "https://brickiq.co.uk/",
+    siteName: "BrickIQ",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Next.js Beginner Template",
+        alt: "BrickIQ",
       },
     ],
-    locale: "en_US",
+    locale: "en_GB",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Next.js Beginner Template",
-    description: "A beginner-friendly Next.js template with TailwindCSS and TypeScript",
+    title: "BrickIQ | Smarter UK Property Deal Analysis",
+    description:
+      "Analyse property deals from Rightmove links in minutes with clear, practical numbers.",
     images: ["/og-image.png"],
   },
   robots: {
@@ -66,11 +72,11 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white text-slate-900`}
       >
         <a
           href="#main-content"
-          className="absolute -top-12 left-4 z-50 px-4 py-2 bg-indigo-600 text-white rounded-md transition-[top] duration-200 focus:top-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          className="absolute -top-12 left-4 z-50 rounded-md bg-slate-900 px-4 py-2 text-white transition-[top] duration-200 focus:top-4 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2"
         >
           Skip to main content
         </a>
