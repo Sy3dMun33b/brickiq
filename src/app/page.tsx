@@ -1,4 +1,20 @@
+"use client";
+
+import { useRef, useState } from "react";
+
 export default function Home() {
+  const outputSectionRef = useRef<HTMLElement | null>(null);
+  const [listingUrl, setListingUrl] = useState("");
+  const [isOutputHighlighted, setIsOutputHighlighted] = useState(false);
+
+  const handleAnalyseDeal = () => {
+    if (!outputSectionRef.current) return;
+
+    outputSectionRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    setIsOutputHighlighted(true);
+    window.setTimeout(() => setIsOutputHighlighted(false), 1400);
+  };
+
   return (
     <main id="main-content" className="bg-white text-slate-900">
       <header className="sticky top-0 z-40 border-b border-slate-200/80 bg-white/95 backdrop-blur">
@@ -42,6 +58,26 @@ export default function Home() {
           or money.
         </p>
         <div className="mt-10 flex flex-wrap items-center gap-4">
+          <label htmlFor="listing-url" className="sr-only">
+            Rightmove listing URL
+          </label>
+          <input
+            id="listing-url"
+            type="url"
+            value={listingUrl}
+            onChange={(event) => setListingUrl(event.target.value)}
+            placeholder="Paste a Rightmove link..."
+            className="w-full max-w-xl rounded-md border border-slate-300 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-500 focus:border-slate-900 focus:outline-none"
+          />
+          <button
+            type="button"
+            onClick={handleAnalyseDeal}
+            className="rounded-md bg-slate-900 px-6 py-3 text-sm font-medium text-white hover:bg-slate-800"
+          >
+            Analyse deal
+          </button>
+        </div>
+        <div className="mt-4 flex flex-wrap items-center gap-4">
           <a
             href="#final-cta"
             className="rounded-md bg-slate-900 px-6 py-3 text-sm font-medium text-white hover:bg-slate-800"
@@ -55,6 +91,10 @@ export default function Home() {
             See deal output
           </a>
         </div>
+        <p className="mt-5 max-w-2xl text-sm text-slate-500">
+          Built around how UK property investors actually analyse deals - without
+          spreadsheet overload.
+        </p>
       </section>
 
       <section id="problem" className="border-y border-slate-200 bg-slate-50/60">
@@ -157,7 +197,13 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="example-output" className="mx-auto w-full max-w-6xl px-6 py-16 md:py-24">
+      <section
+        id="example-output"
+        ref={outputSectionRef}
+        className={`mx-auto w-full max-w-6xl px-6 py-16 transition-colors duration-500 md:py-24 ${
+          isOutputHighlighted ? "bg-amber-50/60" : "bg-white"
+        }`}
+      >
         <h2 className="text-3xl font-semibold tracking-tight">Example deal output</h2>
         <p className="mt-4 max-w-2xl text-slate-600">
           A practical snapshot of the numbers you need before making an offer.
@@ -258,11 +304,11 @@ export default function Home() {
         <div className="mx-auto flex w-full max-w-6xl flex-col items-start justify-between gap-6 px-6 py-16 md:flex-row md:items-center md:py-20">
           <div>
             <h2 className="text-3xl font-semibold tracking-tight">
-              Spend less time analysing. Make better offers.
+              Analyse your next deal in minutes - before you risk overpaying.
             </h2>
             <p className="mt-3 max-w-xl text-slate-600">
-              Join BrickIQ and turn listing links into fast, consistent
-              investment decisions backed by clear numbers.
+              Get a clear view of profit, value, and risk before you commit time
+              or money.
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
