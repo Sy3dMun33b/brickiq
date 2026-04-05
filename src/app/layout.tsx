@@ -2,13 +2,11 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-// Initialize the Geist font with Latin subset
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
 });
 
-// Initialize the Geist Mono font with Latin subset
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
@@ -18,27 +16,32 @@ export const viewport: Viewport = {
   themeColor: "#ffffff",
 };
 
-// Define metadata for better SEO
+const siteUrl =
+  process.env.NEXT_PUBLIC_APP_URL ?? "https://brickiq.netlify.app";
+
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"),
-  title: "BrickIQ | Smarter UK Property Deal Analysis",
+  metadataBase: new URL(siteUrl),
+  title: "BrickIQ | First-pass underwriting for UK property deals",
   description:
-    "BrickIQ helps UK property investors analyse Rightmove deals faster with clear numbers on profit, value, risk, and deal score.",
+    "Paste a Rightmove link. Get estimated profit, ROI, valuation confidence, risk flags, and a deal score—in minutes.",
   keywords: [
     "BrickIQ",
-    "UK property investing",
-    "Rightmove analysis",
+    "UK property",
+    "buy-to-let",
+    "Rightmove",
     "deal analysis",
+    "proptech",
     "property investment software",
   ],
+  applicationName: "BrickIQ",
   authors: [{ name: "BrickIQ" }],
   creator: "BrickIQ",
   publisher: "BrickIQ",
   openGraph: {
-    title: "BrickIQ | Smarter UK Property Deal Analysis",
+    title: "BrickIQ | First-pass underwriting for UK property deals",
     description:
-      "Paste a Rightmove link and quickly see profit, value, risk, and a simple deal score.",
-    url: "https://brickiq.co.uk/",
+      "Standardised first-pass analysis for UK investors—screen more deals with clearer discipline.",
+    url: siteUrl,
     siteName: "BrickIQ",
     images: [
       {
@@ -53,9 +56,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "BrickIQ | Smarter UK Property Deal Analysis",
+    title: "BrickIQ | First-pass underwriting for UK property deals",
     description:
-      "Analyse property deals from Rightmove links in minutes with clear, practical numbers.",
+      "Paste a Rightmove link. Get profit, ROI, risk flags, and a deal score—fast.",
     images: ["/og-image.png"],
   },
   robots: {
@@ -72,11 +75,11 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white text-slate-900`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#fafaf9] text-stone-900`}
       >
         <a
           href="#main-content"
-          className="absolute -top-12 left-4 z-50 rounded-md bg-slate-900 px-4 py-2 text-white transition-[top] duration-200 focus:top-4 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2"
+          className="absolute -top-12 left-4 z-50 rounded-md bg-stone-900 px-4 py-2 text-white transition-[top] duration-200 focus:top-4 focus:outline-none focus:ring-2 focus:ring-stone-900 focus:ring-offset-2"
         >
           Skip to main content
         </a>

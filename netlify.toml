@@ -1,0 +1,10 @@
+[build]
+  # Netlify build images include Node/npm; avoids requiring Bun on the build runner.
+  command = "npm ci && npm run build"
+
+[build.environment]
+  NODE_VERSION = "22"
+  NEXT_PUBLIC_APP_URL = "https://brickiq.netlify.app"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
