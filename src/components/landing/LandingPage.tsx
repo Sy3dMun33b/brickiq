@@ -512,7 +512,7 @@ export function LandingPage() {
               What one <BrandName /> summary looks like
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-stone-600">
-              Example only (Leeds LS6). Verdicts use labels like{" "}
+              Verdicts use labels like{" "}
               <span className="text-stone-800">Strong deal</span>,{" "}
               <span className="text-stone-800">Borderline</span>,{" "}
               <span className="text-stone-800">Overpriced</span>, or{" "}
@@ -925,8 +925,8 @@ export function LandingPage() {
                   When your shortlist is always full
                 </h3>
                 <p className="mt-3 text-[14px] leading-relaxed text-stone-600">
-                  Shared defaults for costs and assumptions—so nobody retypes the same
-                  figures.
+                  Agree your cost and assumption defaults once—every deal on your shortlist is
+                  measured the same way, without retyping figures.
                 </p>
                 <div className="mt-8 border-t border-stone-200 pt-8">
                   <p className="flex items-baseline gap-2">
@@ -941,8 +941,7 @@ export function LandingPage() {
                 </div>
                 <ul className="mt-8 flex flex-1 flex-col gap-3 text-[14px] text-stone-800">
                   <li>More summaries when your deal flow is heavy</li>
-                  <li>Shared defaults for costs—fewer mistyped assumptions</li>
-                  <li>Priority help when something breaks</li>
+                  <li>Same numbers on every summary—fewer mistyped assumptions</li>
                 </ul>
                 <p
                   className={`mt-10 inline-flex min-h-12 w-full select-none items-center justify-center rounded-sm px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.14em] ${
