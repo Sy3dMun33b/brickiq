@@ -1,615 +1,847 @@
 "use client";
 
-import { FormEvent, useCallback } from "react";
+import type { ComponentProps, MouseEvent, ReactNode } from "react";
+import Image from "next/image";
 
-const nav = [
-  { href: "#problem", label: "Problem" },
-  { href: "#why-now", label: "Why now" },
-  { href: "#how", label: "How it works" },
-  { href: "#example", label: "Sample deal" },
-  { href: "#wins", label: "Why us" },
-  { href: "#pricing", label: "Pricing" },
+const navItems = [
+  { id: "overview" as const, label: "Overview" },
+  { id: "example" as const, label: "Sample" },
+  { id: "testimonials" as const, label: "Stories" },
+  { id: "pricing" as const, label: "Pricing" },
 ] as const;
 
-const SECTION_Y = "scroll-mt-16 py-14 sm:py-20";
+const SECTION_PAD = "py-20 md:py-28 lg:py-36";
+const SCROLL_MT = "scroll-mt-28 md:scroll-mt-32";
+const PANEL = "rounded-[1.75rem] border border-stone-200/90 bg-white md:rounded-[2rem]";
 
-function preventNavigate(e: FormEvent) {
-  e.preventDefault();
+function scrollToSection(id: string) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.scrollIntoView({ behavior: "smooth", block: "start" });
+  try {
+    history.replaceState(null, "", `#${id}`);
+  } catch {
+    /* ignore */
+  }
 }
 
-const PRO_MAIL =
-  "mailto:hello@brickiq.co.uk?subject=BrickIQ%20Pro&body=Hi%2C%20I%27d%20like%20to%20talk%20about%20Pro.";
+function onInPageLinkClick(e: MouseEvent<HTMLAnchorElement>, id: string) {
+  if (
+    e.defaultPrevented ||
+    e.button !== 0 ||
+    e.metaKey ||
+    e.ctrlKey ||
+    e.shiftKey ||
+    e.altKey
+  ) {
+    return;
+  }
+  if (!document.getElementById(id)) return;
+  e.preventDefault();
+  scrollToSection(id);
+}
+
+type ScrollLinkProps = Omit<ComponentProps<"a">, "href"> & { sectionId: string };
+
+function ScrollLink({ sectionId, onClick, children, ...rest }: ScrollLinkProps) {
+  return (
+    <a
+      href={`#${sectionId}`}
+      onClick={(e) => {
+        onInPageLinkClick(e, sectionId);
+        onClick?.(e);
+      }}
+      {...rest}
+    >
+      {children}
+    </a>
+  );
+}
+
+function PillBadge({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="inline-flex max-w-full items-center rounded-full border border-stone-900/85 px-3.5 py-1.5 text-[10px] font-medium uppercase tracking-[0.22em] text-stone-900 sm:px-4 sm:text-[11px]">
+      {children}
+    </span>
+  );
+}
+
+/** Product name — use wherever “Brickly” appears so it reads as one brand. */
+function BrandName({ className = "" }: { className?: string }) {
+  return (
+    <span className={`font-semibold tracking-[-0.04em] text-stone-900 ${className}`}>
+      Brickly
+    </span>
+  );
+}
+
+/** Scenic Unsplash photography—illustrative mood only, not real listings. */
+const PROPERTY_IMAGES = {
+  hero: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=2000&q=85",
+  storiesBg:
+    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2000&q=80",
+  strip: [
+    {
+      src: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1600&q=85",
+      alt: "Bright open-plan living space with large windows",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1600&q=85",
+      alt: "Warm contemporary sitting room with natural light",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1600&q=85",
+      alt: "Modern home with pool and evening sky",
+    },
+  ],
+  panorama:
+    "https://images.unsplash.com/photo-1600585152914-d0bec010a4f8?auto=format&fit=crop&w=2400&q=85",
+  panoramaAlt: "Contemporary house exterior at dusk with warm lighting",
+} as const;
+
+/** Hero value columns—what Brickly focuses on. */
+const HERO_VALUE_POINTS: { title: string; text: ReactNode }[] = [
+  {
+    title: "A fast first pass",
+    text: (
+      <>
+        <BrandName /> turns a Rightmove link into the main numbers in minutes—built for
+        investors who skim dozens of deals and need clarity fast.
+      </>
+    ),
+  },
+  {
+    title: "The same picture every time",
+    text: (
+      <>
+        Every <BrandName /> summary uses one layout for every listing so you can compare
+        two homes fairly, without redoing the same work.
+      </>
+    ),
+  },
+  {
+    title: "Said in plain English",
+    text: (
+      <>
+        A clear verdict, the numbers that matter, what to check next, and a score—no
+        jargon. That is the <BrandName /> read.
+      </>
+    ),
+  },
+];
+
+/** Illustrative sample only—shows the shape of a full investor summary. */
+const SAMPLE_VERDICT = {
+  label: "Borderline deal" as const,
+  why: "The rent story works on paper, but the asking price and refurb leave thin room if anything slips.",
+  biggestRisk: "Refurb costs are still a guess until someone has walked the place.",
+  nextStep: "Book a viewing and get a builder’s ballpark before you model a bid.",
+};
+
+const SAMPLE_NUMBERS: { label: string; value: string; note?: string }[] = [
+  { label: "Purchase price", value: "£195,000" },
+  { label: "Stamp duty (illustrative)", value: "£6,700", note: "Based on your buyer profile" },
+  { label: "Legal fees", value: "£1,400" },
+  { label: "Refurb estimate", value: "£18,000" },
+  { label: "Finance costs (arrangement + year one)", value: "£3,200" },
+  { label: "Total cash in", value: "£52,400", note: "Deposit + costs + refurb allowance" },
+  { label: "Expected rent (monthly)", value: "£1,050" },
+  { label: "Gross yield", value: "6.5%" },
+  { label: "Net yield", value: "4.8%", note: "After costs you entered" },
+  { label: "ROI (24 months, base case)", value: "21.4%" },
+  { label: "Monthly cash flow", value: "+£180", note: "Base case" },
+  {
+    label: "Est. profit after costs (24 months)",
+    value: "£41,200",
+    note: "Base case · illustrative",
+  },
+];
+
+const SAMPLE_SCENARIOS = [
+  { label: "Pessimistic", value: "−£40/mo" },
+  { label: "Base", value: "+£180/mo" },
+  { label: "Optimistic", value: "+£310/mo" },
+] as const;
+
+const SAMPLE_AREA: { label: string; text: string }[] = [
+  {
+    label: "Sold nearby",
+    text: "Three similar sales within half a mile, median around £188k (illustrative).",
+  },
+  {
+    label: "Area pricing",
+    text: "Asking is a touch above that band—discount does not look automatic.",
+  },
+  {
+    label: "Rent range",
+    text: "Typical range £950–£1,100/mo for this type of let (indicative).",
+  },
+  {
+    label: "Demand",
+    text: "Comparable listings have been moving in about six weeks (signal only).",
+  },
+  {
+    label: "Discount",
+    text: "Versus asking, the gap looks modest—not obviously a steal on paper.",
+  },
+];
+
+const SAMPLE_RISK_FLAGS = [
+  "Lease length worth confirming",
+  "Service charge details thin on the advert",
+  "Margin tight if refurb runs over",
+  "Rent figure on the optimistic side",
+  "Lender stress not modelled here",
+  "Refurb scope still uncertain",
+  "Resale liquidity untested at this price",
+  "Legal title not reviewed in Brickly",
+] as const;
 
 export function LandingPage() {
-  const scrollTo = useCallback((id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-  }, []);
-
   return (
-    <div className="min-h-screen bg-[#fafaf9] text-stone-900">
-      <header className="sticky top-0 z-40 border-b border-stone-200/80 bg-[#fafaf9]/90 backdrop-blur-md">
-        <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3 sm:gap-4 sm:px-6">
-          <a
-            href="#hero-cta"
-            className="shrink-0 text-lg font-semibold tracking-tight text-stone-900"
+    <div className="min-h-screen min-w-0 overflow-x-hidden bg-[#ebeae8] text-stone-900 antialiased">
+      <header className="fixed inset-x-0 top-0 z-50 border-b border-stone-300/50 bg-[#ebeae8]/90 backdrop-blur-md">
+        <div className="mx-auto flex max-w-[1600px] flex-col items-center gap-4 px-4 py-5 sm:gap-5 sm:px-8 sm:py-6">
+          <ScrollLink
+            sectionId="hero"
+            className="text-stone-900 transition-opacity hover:opacity-85"
+            aria-label="Brickly — home"
           >
-            Brick<span className="text-emerald-700">IQ</span>
-          </a>
+            <BrandName className="!font-bold text-[2.35rem] tracking-[-0.055em] sm:text-[2.85rem] md:text-[3.35rem]" />
+          </ScrollLink>
           <nav
-            className="flex min-w-0 flex-1 items-center justify-end gap-0.5 overflow-x-auto overscroll-x-contain py-0.5 [-ms-overflow-style:none] [scrollbar-width:none] md:justify-center md:gap-1 [&::-webkit-scrollbar]:hidden"
+            className="flex w-full min-w-0 max-w-4xl items-center justify-center gap-5 overflow-x-auto overscroll-x-contain py-0.5 [-ms-overflow-style:none] [scrollbar-width:none] sm:gap-8 lg:gap-10 [&::-webkit-scrollbar]:hidden"
             aria-label="Primary"
           >
-            {nav.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                className="shrink-0 rounded-lg px-2 py-1.5 text-xs font-medium text-stone-600 transition-colors hover:bg-stone-100 hover:text-stone-900 sm:px-2.5 sm:text-sm"
+            {navItems.map((item) => (
+              <ScrollLink
+                key={item.id}
+                sectionId={item.id}
+                className="shrink-0 text-[11px] font-medium uppercase tracking-[0.16em] text-stone-600 transition-colors hover:text-stone-900"
               >
                 {item.label}
-              </a>
+              </ScrollLink>
             ))}
           </nav>
-          <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
-            <button
-              type="button"
-              onClick={() => scrollTo("pricing")}
-              className="hidden rounded-lg border border-stone-300 bg-white px-2.5 py-2 text-xs font-medium text-stone-800 shadow-sm transition hover:bg-stone-50 sm:inline-flex sm:px-3 sm:text-sm"
-            >
-              Pricing
-            </button>
-            <button
-              type="button"
-              onClick={() => scrollTo("hero-cta")}
-              className="rounded-lg bg-stone-900 px-2.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-stone-800 sm:px-3 sm:text-sm"
-            >
-              Try it
-            </button>
-          </div>
         </div>
       </header>
 
       <main id="main-content">
-        {/* Hero */}
+        {/* 1. Hero */}
         <section
-          id="hero-cta"
-          className="relative overflow-hidden border-b border-stone-200/60 bg-gradient-to-b from-white to-stone-100"
+          id="hero"
+          className={`${SCROLL_MT} px-4 pb-8 pt-24 sm:px-6 sm:pb-12 sm:pt-28 md:px-8 lg:px-10`}
           aria-labelledby="hero-heading"
         >
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(16,185,129,0.1),transparent)]" />
-          <div className="relative mx-auto max-w-6xl px-4 pb-14 pt-11 sm:px-6 sm:pb-16 sm:pt-14 lg:pb-20 lg:pt-16">
-            <p className="mb-3 inline-flex items-center rounded-full border border-emerald-200/80 bg-emerald-50/90 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-emerald-900 sm:text-xs">
-              UK property · First-pass underwriting
-            </p>
-            <h1
-              id="hero-heading"
-              className="max-w-3xl text-balance text-[1.65rem] font-semibold leading-[1.15] tracking-tight text-stone-900 sm:text-4xl md:text-[2.65rem] md:leading-[1.1]"
-            >
-              A standard first-pass on UK deals—before the spreadsheet.
-            </h1>
-            <p className="mt-4 max-w-2xl text-pretty text-base leading-relaxed text-stone-600 sm:mt-5 sm:text-lg">
-              Paste a Rightmove link. Get estimated profit, ROI, valuation
-              confidence, risk flags, and a deal score—fast enough to run on every
-              lead.
-            </p>
-
-            <form
-              onSubmit={preventNavigate}
-              className="mt-9 flex max-w-2xl flex-col gap-3 sm:mt-10 sm:flex-row sm:items-stretch"
-            >
-              <label className="sr-only" htmlFor="rm-url">
-                Rightmove listing URL
-              </label>
-              <input
-                id="rm-url"
-                name="url"
-                type="url"
-                inputMode="url"
-                autoComplete="off"
-                placeholder="https://www.rightmove.co.uk/properties/…"
-                className="min-h-[48px] flex-1 rounded-xl border border-stone-300 bg-white px-4 text-base text-stone-900 shadow-sm placeholder:text-stone-400 focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/20 sm:text-sm"
-              />
-              <button
-                type="submit"
-                className="min-h-[48px] shrink-0 rounded-xl bg-emerald-700 px-6 text-sm font-semibold text-white shadow-md transition hover:bg-emerald-800"
-              >
-                Run first-pass
-              </button>
-            </form>
-            <div className="mt-4 flex flex-col gap-2 text-sm text-stone-500 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-4 sm:gap-y-1">
-              <button
-                type="button"
-                onClick={() => scrollTo("example")}
-                className="w-fit text-left font-medium text-emerald-800 underline decoration-emerald-300 underline-offset-4 hover:text-emerald-900"
-              >
-                See sample output
-              </button>
-              <span className="hidden text-stone-400 sm:inline" aria-hidden>
-                ·
-              </span>
-              <span className="max-w-md leading-snug">
-                For buy-to-let, sourcers, and first-time investors screening
-                listings weekly.
-              </span>
+          <div className={`mx-auto max-w-[1600px] ${PANEL} p-6 sm:p-10 md:p-14 lg:p-16`}>
+            <div className="mb-10 flex justify-center border-b border-stone-200/80 pb-8">
+              <PillBadge>
+                <BrandName className="normal-case tracking-[-0.08em] sm:text-[12px]" /> ·
+                UK property summaries
+              </PillBadge>
             </div>
-          </div>
-        </section>
 
-        {/* Problem */}
-        <section id="problem" className={`${SECTION_Y} border-b border-stone-200/80 bg-[#fafaf9]`}>
-          <div className="mx-auto max-w-6xl px-4 sm:px-6">
-            <div className="max-w-2xl">
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-emerald-800 sm:text-sm">
-                The bottleneck
-              </h2>
-              <p className="mt-2 text-xl font-semibold tracking-tight text-stone-900 sm:text-2xl md:text-3xl">
-                Deals still die in scattered spreadsheets.
-              </p>
-              <p className="mt-3 text-base leading-relaxed text-stone-600 sm:mt-4 sm:text-lg">
-                Same numbers pulled from portals and comps, deal after deal—slow,
-                inconsistent, and easy to miss a red flag when you are tired.
-              </p>
-            </div>
-            <ul className="mt-10 grid gap-4 sm:mt-12 sm:grid-cols-3 sm:gap-6">
-              {[
-                {
-                  title: "Time cost",
-                  body: "Manual checks do not compound—each listing costs hours before you even offer.",
-                },
-                {
-                  title: "Price risk",
-                  body: "Small misses on rent, refurb, or value stack into serious money at offer.",
-                },
-                {
-                  title: "No shared score",
-                  body: "Without one comparable view, it is hard to rank deals or align a sourcing team.",
-                },
-              ].map((item) => (
-                <li
-                  key={item.title}
-                  className="rounded-2xl border border-stone-200 bg-white p-5 shadow-sm sm:p-6"
+            <div className="grid gap-14 lg:grid-cols-12 lg:gap-12 lg:items-end">
+              <div className="lg:col-span-5 lg:row-start-1">
+                <p className="max-w-[20rem] text-[13px] leading-relaxed text-stone-600">
+                  <BrandName /> is not a portal, a CRM, or a full underwriting tool. It
+                  stays focused on a clear first read from a link—nothing more.
+                </p>
+              </div>
+
+              <div className="lg:col-span-7 lg:col-start-6">
+                <p className="font-sans text-[13px] uppercase tracking-[0.28em] text-stone-900">
+                  <BrandName className="text-[13px] uppercase tracking-[0.28em]" />
+                </p>
+                <h1
+                  id="hero-heading"
+                  className="mt-4 max-w-4xl text-balance font-sans text-[clamp(2rem,4.5vw,3.35rem)] font-light leading-[1.08] tracking-[-0.035em] text-stone-900"
                 >
-                  <h3 className="text-sm font-semibold text-stone-900 sm:text-base">
-                    {item.title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-stone-600">
-                    {item.body}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
-
-        {/* Why now */}
-        <section id="why-now" className={`${SECTION_Y} border-b border-stone-200/80 bg-white`}>
-          <div className="mx-auto max-w-6xl px-4 sm:px-6">
-            <h2 className="text-xs font-semibold uppercase tracking-wider text-emerald-800 sm:text-sm">
-              Why now
-            </h2>
-            <p className="mt-2 max-w-2xl text-xl font-semibold tracking-tight text-stone-900 sm:text-2xl md:text-3xl">
-              Listings are instant. First-pass analysis still is not.
-            </p>
-            <div className="mt-8 grid gap-5 sm:mt-10 md:grid-cols-2 md:gap-6">
-              <div className="rounded-2xl border border-stone-200 bg-stone-50 p-5 sm:p-7">
-                <h3 className="text-sm font-semibold text-stone-900 sm:text-base">
-                  Stock moves fast
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-stone-600">
-                  Investors who can respond with a disciplined pass—without
-                  losing evenings to each link—keep pipelines moving.
+                  A calm first read on every UK listing you paste from Rightmove.
+                </h1>
+                <p className="mt-8 max-w-xl text-[15px] leading-[1.7] text-stone-600 sm:text-[17px]">
+                  Paste a Rightmove link. One screen: verdict, numbers, local context,
+                  and risk flags—so you can decide if the deal is worth modelling tonight.
                 </p>
-              </div>
-              <div className="rounded-2xl border border-stone-200 bg-stone-50 p-5 sm:p-7">
-                <h3 className="text-sm font-semibold text-stone-900 sm:text-base">
-                  Rightmove is the front door
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-stone-600">
-                  A thin, repeatable layer on the link you already share is the
-                  natural place to start—before portfolio tools and deeper data.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* How it works */}
-        <section id="how" className={`${SECTION_Y} border-b border-stone-200/80 bg-[#fafaf9]`}>
-          <div className="mx-auto max-w-6xl px-4 sm:px-6">
-            <h2 className="text-xs font-semibold uppercase tracking-wider text-emerald-800 sm:text-sm">
-              How it works
-            </h2>
-            <p className="mt-2 max-w-2xl text-xl font-semibold tracking-tight text-stone-900 sm:text-2xl md:text-3xl">
-              One link in. One comparable snapshot out.
-            </p>
-            <ol className="mt-8 grid gap-8 sm:mt-10 md:grid-cols-3 md:gap-6">
-              {[
-                {
-                  step: "01",
-                  title: "Paste the listing",
-                  text: "Use the Rightmove URL you already have.",
-                },
-                {
-                  step: "02",
-                  title: "Review the pass",
-                  text: "Profit, ROI, assumptions, valuation band, and risks in one view.",
-                },
-                {
-                  step: "03",
-                  title: "Filter with a score",
-                  text: "One deal score to shortlist, compare, and brief a broker quickly.",
-                },
-              ].map((row) => (
-                <li key={row.step} className="flex flex-col border-l-2 border-emerald-200 pl-4 md:border-l-0 md:border-t-2 md:pt-4 md:pl-0">
-                  <span className="font-mono text-[11px] font-semibold text-emerald-700">
-                    {row.step}
-                  </span>
-                  <h3 className="mt-1.5 text-base font-semibold text-stone-900">
-                    {row.title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-stone-600">
-                    {row.text}
+                <div className="mt-8 max-w-xl">
+                  <label
+                    htmlFor="rightmove-url-placeholder"
+                    className="text-[11px] font-medium uppercase tracking-[0.16em] text-stone-500"
+                  >
+                    Rightmove listing URL
+                  </label>
+                  <div className="mt-2">
+                    <input
+                      id="rightmove-url-placeholder"
+                      name="rightmove-url"
+                      type="url"
+                      inputMode="url"
+                      autoComplete="off"
+                      readOnly
+                      tabIndex={-1}
+                      placeholder="Coming soon"
+                      aria-readonly="true"
+                      aria-describedby="rightmove-url-hint"
+                      className="pointer-events-none w-full cursor-not-allowed rounded-sm border border-stone-300 bg-stone-100/90 px-4 py-3.5 font-mono text-[14px] text-stone-400 placeholder:text-stone-400 placeholder:italic"
+                    />
+                  </div>
+                  <p
+                    id="rightmove-url-hint"
+                    className="mt-2 text-[12px] leading-relaxed text-stone-500"
+                  >
+                    Link pasting is not available yet—see the sample below for the summary
+                    layout.
                   </p>
-                </li>
-              ))}
-            </ol>
-            <p className="mt-8 max-w-2xl text-sm leading-relaxed text-stone-500 sm:mt-10">
-              Estimates from listing inputs and your stated assumptions—confirm
-              material numbers before you offer. Not financial advice.
-            </p>
-          </div>
-        </section>
-
-        {/* Example output */}
-        <section id="example" className={`${SECTION_Y} border-b border-stone-200/80 bg-white`}>
-          <div className="mx-auto max-w-6xl px-4 sm:px-6">
-            <div className="mx-auto max-w-4xl text-center sm:text-left">
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-emerald-800 sm:text-sm">
-                Sample output
-              </h2>
-              <p className="mt-2 text-xl font-semibold tracking-tight text-stone-900 sm:text-2xl md:text-3xl">
-                The snapshot you see before Excel.
-              </p>
-              <p className="mt-2 text-sm text-stone-600 sm:text-base">
-                Illustrative terraced BTL, Leeds LS6—assumptions editable in
-                product.
-              </p>
-            </div>
-
-            <div className="mx-auto mt-8 max-w-4xl sm:mt-10">
-              <div className="overflow-hidden rounded-2xl border border-stone-200/90 bg-stone-50 shadow-[0_20px_50px_-24px_rgba(0,0,0,0.25)] ring-1 ring-stone-900/5">
-                <div className="flex flex-col gap-4 border-b border-stone-200 bg-gradient-to-b from-white to-stone-50/80 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-7 sm:py-6">
-                  <div className="text-left">
-                    <p className="text-[11px] font-semibold uppercase tracking-wide text-stone-500">
-                      First-pass preview
-                    </p>
-                    <p className="mt-1 font-semibold text-stone-900">
-                      Leeds · LS6 · Terraced freehold
-                    </p>
-                    <p className="mt-0.5 font-mono text-[11px] text-stone-500">
-                      rightmove.co.uk/…/123456789
-                    </p>
-                  </div>
-                  <div className="flex w-full items-center justify-between gap-3 rounded-xl bg-emerald-600/10 px-4 py-3.5 ring-1 ring-emerald-600/20 sm:w-auto sm:justify-end sm:py-4">
-                    <span className="text-sm font-medium text-emerald-900">
-                      Deal score
-                    </span>
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-4xl font-semibold tabular-nums tracking-tight text-emerald-900 sm:text-[2.5rem]">
-                        78
-                      </span>
-                      <span className="text-sm text-emerald-800">/ 100</span>
-                    </div>
-                  </div>
                 </div>
-                <div className="grid gap-px bg-stone-200/90 sm:grid-cols-2">
-                  {[
-                    {
-                      label: "Est. profit (after costs)",
-                      value: "£41,200",
-                      hint: "24-mo horizon, base case",
-                    },
-                    {
-                      label: "Projected ROI",
-                      value: "21.4%",
-                      hint: "On cash invested",
-                    },
-                    {
-                      label: "Valuation confidence",
-                      value: "High",
-                      hint: "Vs local rent & sold evidence",
-                    },
-                    {
-                      label: "Risk level",
-                      value: "Moderate",
-                      hint: "Void + refurb sensitivity",
-                    },
-                  ].map((cell) => (
-                    <div key={cell.label} className="bg-white p-4 sm:p-6">
-                      <p className="text-[11px] font-semibold uppercase tracking-wide text-stone-500">
-                        {cell.label}
+              </div>
+
+              <div id="overview" className="scroll-mt-32 lg:col-span-12 lg:row-start-2">
+                <div className="grid gap-8 border-t border-stone-200/90 pt-10 sm:gap-10 lg:grid-cols-3 lg:gap-12">
+                  {HERO_VALUE_POINTS.map((point) => (
+                    <div key={point.title} className="max-w-md lg:max-w-none">
+                      <h2 className="font-sans text-lg font-normal tracking-tight text-stone-900">
+                        {point.title}
+                      </h2>
+                      <p className="mt-3 text-[14px] leading-relaxed text-stone-600 sm:text-[15px]">
+                        {point.text}
                       </p>
-                      <p className="mt-1 text-2xl font-semibold tabular-nums tracking-tight text-stone-900">
-                        {cell.value}
-                      </p>
-                      <p className="mt-1 text-xs text-stone-500">{cell.hint}</p>
                     </div>
                   ))}
                 </div>
-                <div className="border-t border-stone-200 bg-white px-5 py-4 sm:px-7 sm:py-5">
-                  <p className="text-[11px] font-semibold uppercase tracking-wide text-amber-900">
-                    Flags
+              </div>
+
+              <div className="flex flex-col gap-8 lg:col-span-5 lg:row-start-3">
+                <div className={`${PANEL} border-stone-200/70 bg-stone-50/80 p-6 sm:p-8`}>
+                  <PillBadge>Scope</PillBadge>
+                  <p className="mt-6 text-[14px] leading-relaxed text-stone-600">
+                    <BrandName /> stays narrow on purpose: quick summaries from links, not
+                    full underwriting. Your final offer, legal checks, and tax advice
+                    stay with you and your professionals.
                   </p>
-                  <ul className="mt-2 space-y-1.5 text-sm leading-snug text-stone-700">
-                    <li>EPC borderline—budget uplift if you need a higher rent band.</li>
-                    <li>Similar stock traded ~6% below asking in the last 90 days.</li>
-                  </ul>
+                </div>
+              </div>
+
+              <div className="lg:col-span-7 lg:col-start-6 lg:row-start-3">
+                <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-stone-200/80 bg-stone-200 shadow-[0_20px_50px_-20px_rgba(28,25,23,0.35)] sm:aspect-[16/10] lg:max-h-[min(420px,42vw)] lg:ml-auto lg:max-w-2xl">
+                  <Image
+                    src={PROPERTY_IMAGES.hero}
+                    alt="Scenic modern family home with garden and clear sky"
+                    fill
+                    priority
+                    className="object-cover object-center"
+                    sizes="(max-width:1024px) 100vw, 50vw"
+                  />
                 </div>
               </div>
             </div>
-          </div>
-        </section>
 
-        {/* Benefits */}
-        <section id="benefits" className={`${SECTION_Y} border-b border-stone-200/80 bg-[#fafaf9]`}>
-          <div className="mx-auto max-w-6xl px-4 sm:px-6">
-            <h2 className="text-xs font-semibold uppercase tracking-wider text-emerald-800 sm:text-sm">
-              Why investors use it
-            </h2>
-            <p className="mt-2 max-w-2xl text-xl font-semibold tracking-tight text-stone-900 sm:text-2xl md:text-3xl">
-              Screen more deals without adding headcount.
-            </p>
-            <ul className="mt-8 grid gap-3 sm:mt-10 sm:grid-cols-2 sm:gap-4">
-              {[
-                "Sourcers submit deals in one format—easier to review and reject quickly.",
-                "Deep-dive only where the score and flags justify the time.",
-                "Explicit assumptions surface overpay risk before you get attached.",
-                "Same workflow whether you run one deal a month or twenty.",
-              ].map((line) => (
-                <li
-                  key={line}
-                  className="flex gap-3 rounded-2xl border border-stone-200 bg-white p-4 shadow-sm sm:p-5"
-                >
-                  <span
-                    className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-600"
-                    aria-hidden
-                  />
-                  <span className="text-sm leading-relaxed text-stone-700">
-                    {line}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
-
-        {/* Why BrickIQ wins */}
-        <section id="wins" className={`${SECTION_Y} border-b border-stone-200/80 bg-white`}>
-          <div className="mx-auto max-w-6xl px-4 sm:px-6">
-            <h2 className="text-xs font-semibold uppercase tracking-wider text-emerald-800 sm:text-sm">
-              Why BrickIQ
-            </h2>
-            <p className="mt-2 max-w-2xl text-xl font-semibold tracking-tight text-stone-900 sm:text-2xl md:text-3xl">
-              Same front door as your pipeline. Room to grow from there.
-            </p>
-            <div className="mt-8 grid gap-4 sm:mt-10 lg:grid-cols-3 lg:gap-6">
-              {[
-                {
-                  title: "Starts at the link",
-                  body: "No migration project—investors already begin on Rightmove.",
-                },
-                {
-                  title: "Consistent columns",
-                  body: "Same outputs every time—works solo or when you need everyone aligned.",
-                },
-                {
-                  title: "Natural expansion",
-                  body: "First-pass underwriting can extend into tracking, alerts, and richer UK data when you are ready.",
-                },
-              ].map((card) => (
-                <div
-                  key={card.title}
-                  className="flex flex-col rounded-2xl border border-stone-200 bg-stone-50 p-5 sm:p-6"
-                >
-                  <h3 className="text-sm font-semibold text-stone-900 sm:text-base">
-                    {card.title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-stone-600">
-                    {card.body}
-                  </p>
-                </div>
-              ))}
+            <div className="mt-12 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-8">
+              <ScrollLink
+                sectionId="example"
+                className="inline-flex w-full min-h-12 items-center justify-center rounded-sm bg-stone-900 px-8 py-3.5 text-center text-[11px] font-semibold uppercase tracking-[0.16em] text-white transition hover:bg-stone-800 sm:w-auto"
+              >
+                View sample summary
+              </ScrollLink>
+              <p className="max-w-md text-[13px] leading-relaxed text-stone-500">
+                Illustrative previews only—we do not load live listings in this demo.
+              </p>
             </div>
           </div>
         </section>
 
-        {/* Social proof */}
+        {/* Scenic strip — memorable illustrative homes (stock photography) */}
         <section
-          id="operators"
-          className="scroll-mt-16 border-b border-stone-200/80 bg-[#fafaf9] py-14 sm:py-20"
+          aria-label="Illustrative UK homes"
+          className="px-4 pb-14 pt-4 sm:px-6 sm:pb-16 md:px-8 lg:px-10"
         >
-          <div className="mx-auto max-w-6xl px-4 sm:px-6">
-            <h2 className="text-xs font-semibold uppercase tracking-wider text-emerald-800 sm:text-sm">
-              From operators
+          <div className="mx-auto max-w-[1600px]">
+            <div className="grid gap-3 md:h-[min(26rem,52vh)] md:grid-cols-2 md:grid-rows-2 md:gap-4">
+              <div className="relative min-h-[240px] overflow-hidden rounded-2xl border border-stone-200/80 bg-stone-200 shadow-sm md:row-span-2 md:min-h-0">
+                <Image
+                  src={PROPERTY_IMAGES.strip[0].src}
+                  alt={PROPERTY_IMAGES.strip[0].alt}
+                  fill
+                  className="object-cover object-center transition duration-700 hover:scale-[1.02]"
+                  sizes="(max-width:768px) 100vw, 50vw"
+                />
+              </div>
+              <div className="relative min-h-[180px] overflow-hidden rounded-2xl border border-stone-200/80 bg-stone-200 shadow-sm md:min-h-0">
+                <Image
+                  src={PROPERTY_IMAGES.strip[1].src}
+                  alt={PROPERTY_IMAGES.strip[1].alt}
+                  fill
+                  className="object-cover object-center transition duration-700 hover:scale-[1.02]"
+                  sizes="(max-width:768px) 100vw, 50vw"
+                />
+              </div>
+              <div className="relative min-h-[180px] overflow-hidden rounded-2xl border border-stone-200/80 bg-stone-200 shadow-sm md:min-h-0">
+                <Image
+                  src={PROPERTY_IMAGES.strip[2].src}
+                  alt={PROPERTY_IMAGES.strip[2].alt}
+                  fill
+                  className="object-cover object-center transition duration-700 hover:scale-[1.02]"
+                  sizes="(max-width:768px) 100vw, 50vw"
+                />
+              </div>
+            </div>
+            <p className="mt-4 text-center text-[12px] leading-relaxed text-stone-500">
+              Illustrative homes—stock photography for atmosphere, not live listings.
+            </p>
+          </div>
+        </section>
+
+        {/* Sample output — investor-style preview (illustrative) */}
+        <section
+          id="example"
+          className={`${SCROLL_MT} ${SECTION_PAD} px-4 sm:px-6 md:px-8 lg:px-10`}
+        >
+          <div className="mx-auto max-w-[720px] text-center lg:max-w-[880px]">
+            <PillBadge>Sample summary</PillBadge>
+            <h2 className="mt-8 font-sans text-[clamp(1.5rem,2.5vw,2.1rem)] font-light leading-snug tracking-[-0.02em] text-stone-900">
+              What one <BrandName /> summary looks like
             </h2>
-            <div className="mt-6 grid gap-4 sm:mt-8 md:grid-cols-2 md:gap-6">
-              <figure className="rounded-2xl border border-stone-200 bg-white p-5 shadow-sm sm:p-6">
-                <blockquote className="text-sm leading-relaxed text-stone-700">
-                  “We used to pass screenshots around. Now we look at the same
-                  score and assumptions before we book a viewing.”
-                </blockquote>
-                <figcaption className="mt-3 text-xs font-medium text-stone-500">
-                  Buy-to-let investor, Greater Manchester
-                </figcaption>
-              </figure>
-              <figure className="rounded-2xl border border-stone-200 bg-white p-5 shadow-sm sm:p-6">
-                <blockquote className="text-sm leading-relaxed text-stone-700">
-                  “I still model properly before offer—but I drop half my no-hopers
-                  in five minutes instead of a full evening.”
-                </blockquote>
-                <figcaption className="mt-3 text-xs font-medium text-stone-500">
-                  Sourcer, West Midlands
-                </figcaption>
-              </figure>
+            <p className="mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-stone-600">
+              Example only (Leeds LS6). Verdicts use labels like{" "}
+              <span className="text-stone-800">Strong deal</span>,{" "}
+              <span className="text-stone-800">Borderline</span>,{" "}
+              <span className="text-stone-800">Overpriced</span>, or{" "}
+              <span className="text-stone-800">High risk</span>, each with why, main
+              risk, and a sensible next step. With a real link,{" "}
+              <BrandName /> gives you the same layout every time—easy to compare two
+              deals side by side.
+            </p>
+            <div className="mx-auto mt-8 max-w-2xl border border-stone-200/90 bg-white/80 px-5 py-4 text-left sm:px-6">
+              <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-stone-500">
+                Why the summary is useful
+              </p>
+              <ul className="mt-3 space-y-2 text-[14px] leading-snug text-stone-700">
+                <li className="flex gap-2">
+                  <span className="text-stone-400" aria-hidden>
+                    ·
+                  </span>
+                  <span>See the verdict before you build a full model.</span>
+                </li>
+                <li className="flex gap-2">
+                  <span className="text-stone-400" aria-hidden>
+                    ·
+                  </span>
+                  <span>Keep purchase, costs, rent, and yield on one screen.</span>
+                </li>
+                <li className="flex gap-2">
+                  <span className="text-stone-400" aria-hidden>
+                    ·
+                  </span>
+                  <span>Spot what to verify next—before you book a viewing.</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="mx-auto mt-12 max-w-5xl">
+            <div className="overflow-hidden rounded-2xl border border-stone-200/90 bg-white shadow-[0_1px_0_0_rgba(15,23,42,0.06)]">
+              {/* Listing + score — quick anchor */}
+              <div className="border-b border-stone-100 px-5 py-6 sm:px-8 sm:py-7">
+                <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
+                  <div className="min-w-0 flex-1 text-left">
+                    <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-stone-500">
+                      Listing
+                    </p>
+                    <p className="mt-2 text-lg font-normal leading-snug text-stone-900 sm:text-xl">
+                      Leeds · LS6 · Terraced freehold
+                    </p>
+                    <p className="mt-2 font-mono text-[11px] leading-relaxed text-stone-500 break-all">
+                      rightmove.co.uk/…/123456789
+                    </p>
+                  </div>
+                  <div className="shrink-0 text-left sm:text-right">
+                    <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-stone-500">
+                      Deal score
+                    </p>
+                    <div className="mt-1 flex items-baseline justify-start gap-1.5 sm:justify-end">
+                      <span className="text-4xl font-light tabular-nums tracking-tight text-stone-900 sm:text-[3rem]">
+                        78
+                      </span>
+                      <span className="text-lg font-normal text-stone-600">/100</span>
+                    </div>
+                    <div
+                      className="mt-4 h-2 w-full max-w-[13rem] overflow-hidden rounded-full bg-stone-200 sm:ml-auto"
+                      role="img"
+                      aria-label="Score 78 out of 100"
+                    >
+                      <div className="h-full w-[78%] rounded-full bg-stone-900" aria-hidden />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 1. Verdict */}
+              <div className="border-b border-stone-100 bg-stone-50/80 px-5 py-6 sm:px-8 sm:py-7">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between sm:gap-8">
+                  <div>
+                    <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-stone-500">
+                      Deal verdict
+                    </p>
+                    <p className="mt-2 font-sans text-[1.375rem] font-normal tracking-tight text-stone-900 sm:text-2xl">
+                      {SAMPLE_VERDICT.label}
+                    </p>
+                  </div>
+                  <p className="max-w-xl text-[15px] leading-relaxed text-stone-700">
+                    <span className="font-medium text-stone-900">Why: </span>
+                    {SAMPLE_VERDICT.why}
+                  </p>
+                </div>
+                <div className="mt-6 grid gap-4 border-t border-stone-200/80 pt-6 sm:grid-cols-2">
+                  <p className="text-[14px] leading-relaxed text-stone-700">
+                    <span className="font-medium text-stone-900">Biggest risk · </span>
+                    {SAMPLE_VERDICT.biggestRisk}
+                  </p>
+                  <p className="text-[14px] leading-relaxed text-stone-700">
+                    <span className="font-medium text-stone-900">Next step · </span>
+                    {SAMPLE_VERDICT.nextStep}
+                  </p>
+                </div>
+              </div>
+
+              {/* 2. Full investor numbers */}
+              <div className="border-b border-stone-100 px-5 py-6 sm:px-8 sm:py-7">
+                <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-stone-500">
+                  Numbers in one place
+                </p>
+                <dl className="mt-5 grid grid-cols-1 gap-x-10 gap-y-5 sm:grid-cols-2">
+                  {SAMPLE_NUMBERS.map((row) => (
+                    <div key={row.label} className="flex min-w-0 flex-col">
+                      <dt className="text-[13px] text-stone-600">{row.label}</dt>
+                      <dd className="mt-1 flex flex-wrap items-baseline gap-x-2">
+                        <span
+                          className={`text-lg font-normal tabular-nums tracking-tight text-stone-900 ${
+                            row.label === "Total cash in" ? "font-medium" : ""
+                          }`}
+                        >
+                          {row.value}
+                        </span>
+                        {row.note ? (
+                          <span className="text-[12px] text-stone-500">{row.note}</span>
+                        ) : null}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+                <div className="mt-6 rounded-lg border border-dashed border-stone-200 bg-stone-50/50 px-4 py-4">
+                  <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-stone-500">
+                    Scenario outcomes (monthly cash)
+                  </p>
+                  <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
+                    {SAMPLE_SCENARIOS.map((s) => (
+                      <div
+                        key={s.label}
+                        className="rounded-md border border-stone-200/80 bg-white px-3 py-2.5 text-center"
+                      >
+                        <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-stone-500">
+                          {s.label}
+                        </p>
+                        <p className="mt-1 font-mono text-[15px] tabular-nums text-stone-900">
+                          {s.value}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* 3. Area & comparables */}
+              <div className="border-b border-stone-100 px-5 py-6 sm:px-8 sm:py-7">
+                <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-stone-500">
+                  Area &amp; comparables
+                </p>
+                <ul className="mt-4 space-y-3">
+                  {SAMPLE_AREA.map((row) => (
+                    <li key={row.label} className="flex flex-col gap-1 sm:flex-row sm:gap-4">
+                      <span className="shrink-0 text-[13px] font-medium text-stone-800 sm:w-36">
+                        {row.label}
+                      </span>
+                      <span className="text-[14px] leading-relaxed text-stone-600">
+                        {row.text}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* 4. Risk flags */}
+              <div className="border-b border-stone-100 px-5 py-6 sm:px-8 sm:py-7">
+                <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-stone-500">
+                  Risk flags
+                </p>
+                <ul className="mt-4 flex flex-wrap gap-2">
+                  {SAMPLE_RISK_FLAGS.map((flag) => (
+                    <li
+                      key={flag}
+                      className="rounded-full border border-stone-300/90 bg-white px-3 py-1.5 text-[12px] leading-snug text-stone-700"
+                    >
+                      {flag}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Plain English — one beat */}
+              <div className="border-b border-stone-100 bg-stone-50/90 px-5 py-5 sm:px-8">
+                <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-stone-600">
+                  In plain English
+                </p>
+                <p className="mt-2 text-pretty text-[15px] font-normal leading-relaxed text-stone-900">
+                  Enough to decide your next hour—not enough to bid without your own
+                  checks and professional advice.
+                </p>
+              </div>
+
+              <div className="border-t border-stone-900 bg-stone-900 px-5 py-5 sm:px-8">
+                <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-stone-400">
+                  Before you offer
+                </p>
+                <p className="mt-2 text-[14px] leading-relaxed text-stone-100">
+                  Run your own checks on the listing and your sums—with a solicitor or
+                  surveyor if you need it—before you offer.
+                </p>
+              </div>
+            </div>
+            <p className="mt-6 text-center text-[13px] leading-relaxed text-stone-500">
+              Illustrative preview. Uses numbers you enter alongside the advert. Not
+              financial advice.
+            </p>
+          </div>
+        </section>
+
+        {/* 4. Testimonials */}
+        <section
+          id="testimonials"
+          className={`${SCROLL_MT} ${SECTION_PAD} px-4 sm:px-6 md:px-8 lg:px-10`}
+        >
+          <div className="mx-auto max-w-[1600px]">
+            <div className="relative overflow-hidden rounded-[1.75rem] border border-stone-200/90 bg-stone-300 md:rounded-[2rem]">
+              <div className="relative min-h-[520px] lg:min-h-[480px]">
+                <Image
+                  src={PROPERTY_IMAGES.storiesBg}
+                  alt=""
+                  fill
+                  className="object-cover object-center"
+                  sizes="100vw"
+                />
+                <div className="absolute inset-0 bg-[#f4f3f1]/82" aria-hidden />
+                <div className="relative grid gap-12 p-8 sm:p-12 lg:min-h-[480px] lg:grid-cols-2 lg:items-center lg:gap-16 lg:p-16">
+                  <div className="max-w-md">
+                    <PillBadge>
+                      About <BrandName className="normal-case tracking-[0.22em] sm:text-[11px]" />
+                    </PillBadge>
+                    <h2 className="mt-8 font-sans text-[clamp(1.75rem,3vw,2.5rem)] font-light leading-[1.12] tracking-[-0.03em] text-stone-900">
+                      What people say
+                    </h2>
+                    <p className="mt-4 text-[14px] leading-relaxed text-stone-600">
+                      Honest feedback from people who buy or hold UK property—nothing
+                      staged, no paid quotes.
+                    </p>
+                  </div>
+                  <div className="flex flex-col gap-5">
+                    {[
+                      {
+                        quote:
+                          "I used to lose whole evenings opening ten Rightmove tabs and half-built spreadsheets. With Brickly I get one clean read per link—I still verify everything myself, but I know which deals are worth that effort.",
+                        name: "Portfolio landlord",
+                        place: "Greater Manchester",
+                      },
+                      {
+                        quote:
+                          "Clients do not want a forty-slide deck. They want to know if a deal is worth a second look. Brickly is the first thing I send after I paste the link—same layout every time, so nobody is comparing apples with oranges.",
+                        name: "Independent deal sourcer",
+                        place: "West Midlands",
+                      },
+                      {
+                        quote:
+                          "I am not looking for Brickly to replace my broker or my solicitor. I want a calm first pass so I do not fall in love with the photos before I have seen the numbers. It does exactly that.",
+                        name: "Buy-to-let buyer",
+                        place: "West Yorkshire",
+                      },
+                    ].map((t) => (
+                      <figure
+                        key={`${t.name}-${t.place}`}
+                        className="border border-stone-200/90 bg-white p-6 sm:p-7"
+                      >
+                        <blockquote className="text-[15px] font-normal leading-relaxed text-stone-800">
+                          “{t.quote}”
+                        </blockquote>
+                        <figcaption className="mt-4 text-[12px] text-stone-500">
+                          <span className="font-medium text-stone-800">{t.name}</span>
+                          <span className="text-stone-400"> · </span>
+                          {t.place}
+                        </figcaption>
+                      </figure>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
         {/* Pricing */}
-        <section id="pricing" className={`${SECTION_Y} border-b border-stone-200/80 bg-white`}>
-          <div className="mx-auto max-w-6xl px-4 sm:px-6">
-            <h2 className="text-xs font-semibold uppercase tracking-wider text-emerald-800 sm:text-sm">
-              Pricing
-            </h2>
-            <p className="mt-2 max-w-2xl text-xl font-semibold tracking-tight text-stone-900 sm:text-2xl md:text-3xl">
-              Pay for pipeline throughput—not a one-off toy.
-            </p>
-            <p className="mt-2 max-w-2xl text-sm text-stone-600 sm:text-base">
-              Starter validates the workflow. Pro matches investors who screen
-              weekly and want shared assumptions across deals.
-            </p>
-            <div className="mx-auto mt-8 grid max-w-4xl gap-5 sm:mt-10 lg:grid-cols-2 lg:gap-8">
-              <div className="flex flex-col rounded-2xl border border-stone-200 bg-stone-50 p-6 shadow-sm sm:p-8">
-                <h3 className="text-lg font-semibold text-stone-900">Starter</h3>
-                <p className="mt-1 text-sm text-stone-600">
-                  Try the first-pass on your next few listings.
+        <section
+          id="pricing"
+          className={`${SCROLL_MT} ${SECTION_PAD} px-4 sm:px-6 md:px-8 lg:px-10`}
+        >
+          <div className="mx-auto max-w-[1600px]">
+            <div className="relative mb-10 h-44 overflow-hidden rounded-[1.75rem] border border-stone-200/90 shadow-[0_24px_60px_-28px_rgba(28,25,23,0.45)] sm:mb-12 sm:h-52 md:mb-14 md:h-60 md:rounded-[2rem]">
+              <Image
+                src={PROPERTY_IMAGES.panorama}
+                alt={PROPERTY_IMAGES.panoramaAlt}
+                fill
+                className="object-cover object-[center_30%]"
+                sizes="(max-width:1600px) 100vw, 1600px"
+                loading="lazy"
+              />
+              <div
+                className="absolute inset-0 bg-gradient-to-t from-stone-900/35 via-stone-900/5 to-transparent"
+                aria-hidden
+              />
+            </div>
+          </div>
+          <div className={`mx-auto max-w-[1600px] ${PANEL} p-6 sm:p-10 md:p-14 lg:p-16`}>
+            <div className="mx-auto max-w-2xl text-center">
+              <PillBadge>Pricing</PillBadge>
+              <h2 className="mt-8 font-sans text-[clamp(1.75rem,2.8vw,2.35rem)] font-light tracking-[-0.02em] text-stone-900">
+                Pay for how often you use <BrandName />.
+              </h2>
+              <p className="mt-4 text-[15px] leading-relaxed text-stone-600">
+                Starter lets you try the same <BrandName /> summary format. Pro adds
+                shared defaults when you paste links often—same focused layout, less
+                retyping.
+              </p>
+            </div>
+            <div className="mx-auto mt-14 grid max-w-4xl gap-8 lg:grid-cols-2 lg:gap-10">
+              <div className="flex flex-col rounded-2xl border border-stone-200/90 bg-stone-50/50 p-8 sm:p-10">
+                <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-stone-500">
+                  Starter
                 </p>
-                <p className="mt-5">
-                  <span className="text-4xl font-semibold tracking-tight text-stone-900">
-                    £0
-                  </span>
-                  <span className="ml-2 text-sm text-stone-600">
-                    · 14-day trial
-                  </span>
+                <h3 className="mt-3 font-sans text-xl font-normal text-stone-900">
+                  Try <BrandName /> quietly
+                </h3>
+                <p className="mt-3 text-[14px] leading-relaxed text-stone-600">
+                  A handful of summaries to see if the format fits how you work.
                 </p>
-                <ul className="mt-5 space-y-2 text-sm text-stone-700">
-                  <li className="flex gap-2">
-                    <span className="text-emerald-700" aria-hidden>
-                      ✓
+                <div className="mt-8 border-t border-stone-200 pt-8">
+                  <p className="flex items-baseline gap-2">
+                    <span className="text-4xl font-light tabular-nums text-stone-900">
+                      £0
                     </span>
-                    <span>Full first-pass per listing</span>
-                  </li>
-                  <li className="flex gap-2">
-                    <span className="text-emerald-700" aria-hidden>
-                      ✓
-                    </span>
-                    <span>Deal score + summary you can share</span>
-                  </li>
-                  <li className="flex gap-2">
-                    <span className="text-emerald-700" aria-hidden>
-                      ✓
-                    </span>
-                    <span>Email support</span>
-                  </li>
+                    <span className="text-[15px] text-stone-600">14-day trial</span>
+                  </p>
+                  <p className="mt-2 text-[13px] text-stone-500">
+                    Then move to Pro—or stop. No trap doors.
+                  </p>
+                </div>
+                <ul className="mt-8 flex flex-1 flex-col gap-3 text-[14px] text-stone-800">
+                  <li>One investor-style summary per link you paste</li>
+                  <li>Same layout every time—easy to compare two deals</li>
+                  <li>Help when you are stuck</li>
                 </ul>
-                <button
-                  type="button"
-                  onClick={() => scrollTo("hero-cta")}
-                  className="mt-auto w-full rounded-xl border border-stone-300 bg-white py-3 text-sm font-semibold text-stone-900 shadow-sm transition hover:bg-stone-50"
+                <p
+                  className="mt-10 inline-flex min-h-12 w-full cursor-default items-center justify-center rounded-sm border border-stone-300 bg-white px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-stone-500"
+                  aria-label="Starter pricing coming soon"
                 >
-                  Start with a listing
-                </button>
+                  Coming soon
+                </p>
               </div>
-              <div className="relative flex flex-col rounded-2xl border-2 border-emerald-700/35 bg-white p-6 shadow-md ring-1 ring-emerald-800/10 sm:p-8">
-                <span className="absolute -top-3 left-5 rounded-full bg-emerald-700 px-3 py-0.5 text-[11px] font-semibold text-white sm:left-6">
-                  Weekly screening
-                </span>
-                <h3 className="text-lg font-semibold text-stone-900">Pro</h3>
-                <p className="mt-1 text-sm text-stone-600">
-                  For active investors and sourcers running volume.
+
+              <div className="flex flex-col rounded-2xl border border-stone-900 bg-white p-8 sm:p-10">
+                <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-stone-500">
+                  Pro
                 </p>
-                <p className="mt-5">
-                  <span className="text-4xl font-semibold tracking-tight text-stone-900">
-                    £39
-                  </span>
-                  <span className="text-stone-600"> / month</span>
+                <h3 className="mt-3 font-sans text-xl font-normal text-stone-900">
+                  When your shortlist is always full
+                </h3>
+                <p className="mt-3 text-[14px] leading-relaxed text-stone-600">
+                  Shared defaults for costs and assumptions—so nobody retypes the same
+                  figures.
                 </p>
-                <p className="mt-1 text-xs text-stone-500">
-                  Per workspace · cancel any time
-                </p>
-                <ul className="mt-5 space-y-2 text-sm text-stone-700">
-                  <li className="flex gap-2">
-                    <span className="text-emerald-700" aria-hidden>
-                      ✓
+                <div className="mt-8 border-t border-stone-200 pt-8">
+                  <p className="flex items-baseline gap-2">
+                    <span className="text-4xl font-light tabular-nums text-stone-900">
+                      £9.99
                     </span>
-                    <span>Higher weekly first-pass allowance</span>
-                  </li>
-                  <li className="flex gap-2">
-                    <span className="text-emerald-700" aria-hidden>
-                      ✓
-                    </span>
-                    <span>Shared assumption templates</span>
-                  </li>
-                  <li className="flex gap-2">
-                    <span className="text-emerald-700" aria-hidden>
-                      ✓
-                    </span>
-                    <span>Priority support</span>
-                  </li>
+                    <span className="text-[15px] text-stone-600">/ month</span>
+                  </p>
+                  <p className="mt-2 text-[13px] text-stone-500">
+                    One account · cancel any time
+                  </p>
+                </div>
+                <ul className="mt-8 flex flex-1 flex-col gap-3 text-[14px] text-stone-800">
+                  <li>More summaries when your deal flow is heavy</li>
+                  <li>Shared defaults for costs—fewer mistyped assumptions</li>
+                  <li>Priority help when something breaks</li>
                 </ul>
-                <a
-                  href={PRO_MAIL}
-                  className="mt-auto flex min-h-[48px] w-full items-center justify-center rounded-xl bg-emerald-700 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-emerald-800"
+                <p
+                  className="mt-10 inline-flex min-h-12 w-full cursor-default items-center justify-center rounded-sm bg-stone-900 px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-white"
+                  aria-label="Pro pricing coming soon"
                 >
-                  Talk to us about Pro
-                </a>
+                  Coming soon
+                </p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Final CTA */}
+        {/* 5. Final CTA */}
         <section
           id="cta"
-          className="scroll-mt-16 bg-gradient-to-b from-stone-900 to-stone-950 py-14 text-white sm:py-20"
+          className={`${SCROLL_MT} border-t border-stone-300/60 bg-[#e4e3e1] px-4 py-20 sm:px-6 md:px-8 lg:px-10 lg:py-28`}
         >
-          <div className="mx-auto max-w-2xl px-4 text-center sm:px-6">
-            <h2 className="text-xl font-semibold tracking-tight sm:text-2xl md:text-3xl">
-              First-pass the next deal in minutes—not tonight.
+          <div className={`mx-auto max-w-[960px] ${PANEL} px-8 py-12 text-center sm:px-14 sm:py-16`}>
+            <h2 className="font-sans text-[clamp(1.5rem,2.8vw,2.15rem)] font-light leading-snug tracking-[-0.02em] text-stone-900">
+              <BrandName />: fast pass, fair compare, plain signal—same focus every time.
             </h2>
-            <p className="mt-3 text-base text-stone-300 sm:mt-4 sm:text-lg">
-              Paste a Rightmove link. Get profit, ROI, flags, and a score before
-              you model the edge cases.
+            <p className="mx-auto mt-6 max-w-lg text-[15px] leading-relaxed text-stone-600">
+              Paste a Rightmove link into <BrandName /> when you want that first read—then
+              take your time on the serious sums in your own sheet.
             </p>
-            <div className="mt-7 flex flex-col items-stretch gap-3 sm:mt-9 sm:flex-row sm:justify-center sm:gap-4">
-              <button
-                type="button"
-                onClick={() => scrollTo("hero-cta")}
-                className="min-h-[48px] w-full rounded-xl bg-white px-6 py-3 text-sm font-semibold text-stone-900 shadow-lg transition hover:bg-stone-100 sm:w-auto sm:min-w-[200px]"
+            <div className="mt-10 flex flex-col items-stretch justify-center gap-4 sm:flex-row sm:gap-5">
+              <ScrollLink
+                sectionId="example"
+                className="inline-flex min-h-12 items-center justify-center rounded-sm bg-stone-900 px-10 py-3.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-white transition hover:bg-stone-800"
               >
-                Paste a listing
-              </button>
-              <button
-                type="button"
-                onClick={() => scrollTo("example")}
-                className="min-h-[48px] w-full rounded-xl border border-stone-500 bg-transparent px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10 sm:w-auto sm:min-w-[200px]"
+                View sample summary
+              </ScrollLink>
+              <ScrollLink
+                sectionId="hero"
+                className="inline-flex min-h-12 items-center justify-center rounded-sm border border-stone-900 bg-transparent px-10 py-3.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-stone-900 transition hover:bg-stone-900/5"
               >
-                View sample output
-              </button>
+                Back to top
+              </ScrollLink>
             </div>
           </div>
         </section>
       </main>
 
-      <footer className="border-t border-stone-200 bg-[#fafaf9] py-9 sm:py-10">
-        <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 sm:flex-row sm:items-start sm:justify-between sm:px-6">
+      <footer className="border-t border-stone-300/60 bg-[#ebeae8] px-4 py-14 sm:px-8">
+        <div className="mx-auto flex max-w-[1600px] flex-col gap-10 md:flex-row md:items-start md:justify-between">
           <div>
-            <p className="font-semibold text-stone-900">
-              Brick<span className="text-emerald-700">IQ</span>
+            <p className="text-[15px] tracking-[-0.02em] text-stone-900">
+              <BrandName className="text-[15px]" />
             </p>
-            <p className="mt-2 max-w-sm text-sm text-stone-600">
-              First-pass analysis for UK property investors. Estimates only—not
-              financial, tax, or legal advice.
+            <p className="mt-3 max-w-sm text-[14px] leading-relaxed text-stone-600">
+              <BrandName /> turns a Rightmove link into a quick, comparable summary—a
+              first pass before your own serious sums. Not financial, tax, or legal
+              advice.
             </p>
           </div>
-          <div className="flex flex-col gap-2 text-sm text-stone-500 sm:items-end">
-            <p>© {new Date().getFullYear()} BrickIQ</p>
-            <button
-              type="button"
-              onClick={() => scrollTo("hero-cta")}
-              className="w-fit font-medium text-emerald-800 hover:underline"
+          <div className="flex flex-col gap-3 text-[14px] text-stone-600 md:items-end">
+            <p>
+              © {new Date().getFullYear()} <BrandName />
+            </p>
+            <ScrollLink
+              sectionId="hero"
+              className="w-fit font-medium text-stone-900 underline underline-offset-4 hover:text-stone-700"
             >
               Back to top
-            </button>
+            </ScrollLink>
           </div>
         </div>
       </footer>

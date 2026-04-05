@@ -13,42 +13,40 @@ const geistMono = Geist_Mono({
 });
 
 export const viewport: Viewport = {
-  themeColor: "#ffffff",
+  themeColor: "#ebeae8",
 };
 
 const siteUrl =
-  process.env.NEXT_PUBLIC_APP_URL ?? "https://brickiq.netlify.app";
+  process.env.NEXT_PUBLIC_APP_URL ?? "https://brickly.netlify.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "BrickIQ | First-pass underwriting for UK property deals",
+  title: "Brickly | Quick checks on UK property deals",
   description:
-    "Paste a Rightmove link. Get estimated profit, ROI, valuation confidence, risk flags, and a deal score—in minutes.",
+    "Paste a Rightmove link. Get a short summary—profit, what to watch, and a simple score—before you open a full spreadsheet.",
   keywords: [
-    "BrickIQ",
+    "Brickly",
     "UK property",
-    "buy-to-let",
     "Rightmove",
-    "deal analysis",
-    "proptech",
-    "property investment software",
+    "property",
+    "listing summary",
   ],
-  applicationName: "BrickIQ",
-  authors: [{ name: "BrickIQ" }],
-  creator: "BrickIQ",
-  publisher: "BrickIQ",
+  applicationName: "Brickly",
+  authors: [{ name: "Brickly" }],
+  creator: "Brickly",
+  publisher: "Brickly",
   openGraph: {
-    title: "BrickIQ | First-pass underwriting for UK property deals",
+    title: "Brickly | Quick checks on UK property deals",
     description:
-      "Standardised first-pass analysis for UK investors—screen more deals with clearer discipline.",
+      "Summaries for people who want a faster, clearer first look at each listing.",
     url: siteUrl,
-    siteName: "BrickIQ",
+    siteName: "Brickly",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "BrickIQ",
+        alt: "Brickly",
       },
     ],
     locale: "en_GB",
@@ -56,9 +54,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "BrickIQ | First-pass underwriting for UK property deals",
+    title: "Brickly | Quick checks on UK property deals",
     description:
-      "Paste a Rightmove link. Get profit, ROI, risk flags, and a deal score—fast.",
+      "Paste a Rightmove link. Warnings, profit line, and a simple score—in one place.",
     images: ["/og-image.png"],
   },
   robots: {
@@ -73,9 +71,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#fafaf9] text-stone-900`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#ebeae8] text-stone-900`}
       >
         <a
           href="#main-content"

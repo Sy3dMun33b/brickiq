@@ -1,6 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+        pathname: "/**",
+      },
+    ],
+  },
   async headers() {
     return [
       {
@@ -19,7 +28,7 @@ const nextConfig = {
               "default-src 'self'",
               "script-src 'self'",
               "style-src 'self' 'unsafe-inline'",
-              "img-src 'self' data: blob:",
+              "img-src 'self' data: blob: https://images.unsplash.com",
               "font-src 'self'",
               "object-src 'none'",
               "base-uri 'none'",

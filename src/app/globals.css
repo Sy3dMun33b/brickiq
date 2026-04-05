@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+html {
+  overflow-x: clip;
+}
+
 /* Focus styles */
 *:focus-visible {
   outline: 2px solid #0f172a;
@@ -8,7 +12,7 @@
 
 body {
   font-family: "Geist", sans-serif;
-  color: #0f172a;
-  background: #ffffff;
+  color: #0c0a09;
+  background: #ebeae8;
   line-height: 1.5;
 }

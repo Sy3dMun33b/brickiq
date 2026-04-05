@@ -1,6 +1,6 @@
-# BrickIQ Landing Page
+# Brickly Landing Page
 
-A clean, modern landing page for BrickIQ, a UK property investing tool that helps users analyse deals quickly and avoid costly mistakes.
+A clean, modern landing page for Brickly, a UK property investing tool that helps users analyse deals quickly and avoid costly mistakes.
 
 ## Tech Stack
 
@@ -36,7 +36,7 @@ A clean, modern landing page for BrickIQ, a UK property investing tool that help
 1. **Clone the repository**
    ```bash
    git clone <your-repo-url>
-   cd brickiq
+   cd brickly
    ```
 
 2. **Install dependencies**
@@ -56,7 +56,7 @@ A clean, modern landing page for BrickIQ, a UK property investing tool that help
 ## Project Structure
 
 ```
-brickiq/
+brickly/
 ├── docs/                       # Documentation (ignored in git by default)
 ├── for-agent/                  # Agent helper files (ignored in git by default)
 ├── src/                       # Source code

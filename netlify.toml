@@ -4,7 +4,7 @@
 
 [build.environment]
   NODE_VERSION = "22"
-  NEXT_PUBLIC_APP_URL = "https://brickiq.netlify.app"
+  NEXT_PUBLIC_APP_URL = "https://brickly.netlify.app"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
