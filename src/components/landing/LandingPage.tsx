@@ -76,9 +76,9 @@ function BrandName({ className = "" }: { className?: string }) {
   );
 }
 
-/** Scenic Unsplash photography—illustrative mood only, not real listings. */
+/** Hero: brand asset in /public. Other scenes: Unsplash—illustrative mood only. */
 const PROPERTY_IMAGES = {
-  hero: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=2000&q=85",
+  hero: "/hero-home.png",
   storiesBg:
     "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2000&q=80",
   strip: [
@@ -243,19 +243,19 @@ export function LandingPage() {
               </PillBadge>
             </div>
 
-            <div className="grid gap-10 lg:grid-cols-2 lg:items-center lg:gap-12 xl:gap-14">
-              <div className="relative w-full overflow-hidden rounded-2xl border border-stone-200/80 bg-stone-200 shadow-[0_20px_50px_-20px_rgba(28,25,23,0.28)] aspect-[4/3] sm:aspect-[3/2] lg:aspect-[8/5]">
+            <div className="grid gap-10 lg:grid-cols-12 lg:items-center lg:gap-10 xl:gap-12">
+              <div className="relative w-full overflow-hidden rounded-2xl border border-stone-200/80 bg-stone-200 shadow-[0_20px_50px_-20px_rgba(28,25,23,0.28)] aspect-[666/1000] lg:col-span-8">
                 <Image
                   src={PROPERTY_IMAGES.hero}
-                  alt="Scenic modern family home with garden and clear sky"
+                  alt="Modern two-storey home at dusk with warm light at the entrance"
                   fill
                   priority
-                  className="object-cover object-center"
-                  sizes="(max-width:1024px) 100vw, 45vw"
+                  className="object-contain object-center"
+                  sizes="(max-width:1023px) 100vw, 66vw"
                 />
               </div>
 
-              <div className="min-w-0 space-y-8 lg:space-y-10">
+              <div className="min-w-0 space-y-8 lg:col-span-4 lg:space-y-10">
                 <h1
                   id="hero-heading"
                   className="max-w-3xl text-balance font-sans text-[clamp(2rem,4.5vw,3.35rem)] font-light leading-[1.2] tracking-[-0.03em] text-stone-900"
