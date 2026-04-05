@@ -17,7 +17,7 @@ export const viewport: Viewport = {
 };
 
 const siteUrl =
-  process.env.NEXT_PUBLIC_APP_URL ?? "https://brickly.netlify.app";
+  process.env.NEXT_PUBLIC_APP_URL ?? "https://bricklyhomes.netlify.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
