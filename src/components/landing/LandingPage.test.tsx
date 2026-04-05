@@ -12,7 +12,7 @@ describe("LandingPage", () => {
   it("renders the hero subline", () => {
     render(<LandingPage />);
     expect(
-      screen.getByText(/commit capital with clearer discipline/i),
+      screen.getByText(/fast enough to run on every lead/i),
     ).toBeInTheDocument();
   });
 
