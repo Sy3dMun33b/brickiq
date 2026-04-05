@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Brickly | Investor-style summaries from Rightmove links",
     description:
-      "A calm first read on every listing—structured like an investor memo, not a chat thread.",
+      "Same investor-style read for every Rightmove link—structured like a memo, not a chat thread that drifts.",
     url: siteUrl,
     siteName: "Brickly",
     images: [

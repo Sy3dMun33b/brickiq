@@ -5,14 +5,14 @@ describe("LandingPage", () => {
   it("renders the main heading", () => {
     render(<LandingPage />);
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-      /calm first read/i,
+      /investor-style read/i,
     );
   });
 
   it("renders the hero subline", () => {
     render(<LandingPage />);
     expect(
-      screen.getByText(/One screen: verdict, numbers, local context/i),
+      screen.getByText(/Paste a link and you get one screen/i),
     ).toBeInTheDocument();
   });
 

@@ -44,7 +44,10 @@ function onInPageLinkClick(e: MouseEvent<HTMLAnchorElement>, id: string) {
 
 type ScrollLinkProps = Omit<ComponentProps<"a">, "href"> & { sectionId: string };
 
-function ScrollLink({ sectionId, onClick, children, ...rest }: ScrollLinkProps) {
+const FOCUS_RING =
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-900 focus-visible:ring-offset-2 focus-visible:ring-offset-[#ebeae8]";
+
+function ScrollLink({ sectionId, onClick, children, className, ...rest }: ScrollLinkProps) {
   return (
     <a
       href={`#${sectionId}`}
@@ -52,6 +55,7 @@ function ScrollLink({ sectionId, onClick, children, ...rest }: ScrollLinkProps) 
         onInPageLinkClick(e, sectionId);
         onClick?.(e);
       }}
+      className={className ? `${className} ${FOCUS_RING}` : FOCUS_RING}
       {...rest}
     >
       {children}
@@ -100,29 +104,30 @@ const PROPERTY_IMAGES = {
 /** Hero value columns—what Brickly focuses on. */
 const HERO_VALUE_POINTS: { title: string; text: ReactNode }[] = [
   {
-    title: "A fast first pass",
+    title: "A quick first pass",
     text: (
       <>
-        <BrandName /> turns a Rightmove link into the main numbers in minutes—built for
-        investors who skim dozens of deals and need clarity fast.
+        Pull the headline numbers from a Rightmove link into one place—built for nights
+        when you are skimming a long shortlist, not building a model on every tab.
       </>
     ),
   },
   {
-    title: "The same picture every time",
+    title: "Same layout every time",
     text: (
       <>
-        Every <BrandName /> summary uses one layout for every listing so you can compare
-        two homes fairly, without redoing the same work.
+        Every <BrandName /> summary follows one structure, so you can put two deals side
+        by side without rebuilding the same spreadsheet columns or re-asking a chat
+        tool and getting a different format.
       </>
     ),
   },
   {
-    title: "Said in plain English",
+    title: "Plain English",
     text: (
       <>
-        A clear verdict, the numbers that matter, what to check next, and a score—no
-        jargon. That is the <BrandName /> read.
+        Verdict, the numbers that matter, what to verify next, and a score—no jargon.
+        That is the <BrandName /> read.
       </>
     ),
   },
@@ -204,7 +209,7 @@ export function LandingPage() {
         <div className="mx-auto flex max-w-[1600px] flex-col items-center gap-4 px-4 py-5 sm:gap-5 sm:px-8 sm:py-6">
           <ScrollLink
             sectionId="hero"
-            className="text-stone-900 transition-opacity hover:opacity-85"
+            className="rounded-sm text-stone-900 transition-opacity hover:opacity-85"
             aria-label="Brickly — home"
           >
             <BrandName className="!font-bold text-[2.35rem] tracking-[-0.055em] sm:text-[2.85rem] md:text-[3.35rem]" />
@@ -217,7 +222,7 @@ export function LandingPage() {
               <ScrollLink
                 key={item.id}
                 sectionId={item.id}
-                className="shrink-0 text-[11px] font-medium uppercase tracking-[0.16em] text-stone-600 transition-colors hover:text-stone-900"
+                className="shrink-0 rounded-sm text-[11px] font-medium uppercase tracking-[0.16em] text-stone-600 transition-colors hover:text-stone-900"
               >
                 {item.label}
               </ScrollLink>
@@ -243,31 +248,32 @@ export function LandingPage() {
               </PillBadge>
             </div>
 
-            <div className="grid gap-10 lg:grid-cols-12 lg:items-center lg:gap-10 xl:gap-12">
-              <div className="relative w-full overflow-hidden rounded-2xl border border-stone-200/80 bg-stone-200 shadow-[0_20px_50px_-20px_rgba(28,25,23,0.28)] aspect-[666/1000] lg:col-span-8">
+            <div className="flex flex-col gap-8 lg:gap-10">
+              <div className="relative mx-auto w-full max-w-4xl overflow-hidden rounded-2xl border border-stone-200/80 bg-stone-200 shadow-[0_20px_50px_-20px_rgba(28,25,23,0.28)] aspect-[666/1000]">
                 <Image
                   src={PROPERTY_IMAGES.hero}
                   alt="Modern two-storey home at dusk with warm light at the entrance"
                   fill
                   priority
                   className="object-contain object-center"
-                  sizes="(max-width:1023px) 100vw, 66vw"
+                  sizes="(max-width:1024px) 100vw, 896px"
                 />
               </div>
 
-              <div className="min-w-0 space-y-8 lg:col-span-4 lg:space-y-10">
+              <div className="mx-auto min-w-0 w-full max-w-3xl space-y-8 lg:space-y-10">
                 <h1
                   id="hero-heading"
                   className="max-w-3xl text-balance font-sans text-[clamp(2rem,4.5vw,3.35rem)] font-light leading-[1.2] tracking-[-0.03em] text-stone-900"
                 >
-                  A calm first read on every UK listing you paste from Rightmove.
+                  The same investor-style read for every Rightmove link—not a one-off
+                  spreadsheet or a chat that changes shape each time.
                 </h1>
                 <p className="max-w-xl text-[15px] leading-[1.85] text-stone-600 sm:text-[17px] sm:leading-[1.8]">
-                  Paste a Rightmove link. One screen: verdict, numbers, local context,
-                  and risk flags—so you can decide if the deal is worth modelling tonight.
-                  For buy-to-let investors and sourcers, that first pass replaces tab
-                  chaos and inconsistent one-off chats—your offer and professional
-                  checks still sit with you.
+                  Paste a link and you get one screen: verdict, numbers, local context,
+                  and risk flags—so you can see whether the deal is worth modelling
+                  tonight. Built for buy-to-let investors and sourcers who want a
+                  repeatable first pass; your offer, tax position, and legal checks stay
+                  with you and your advisers.
                 </p>
                 <div className="max-w-xl space-y-3">
                   <label
@@ -284,8 +290,9 @@ export function LandingPage() {
                     autoComplete="off"
                     readOnly
                     tabIndex={-1}
-                    placeholder="Available shortly"
+                    placeholder="Opens when link paste ships"
                     aria-readonly="true"
+                    aria-disabled="true"
                     aria-describedby="rightmove-url-hint"
                     className="pointer-events-none w-full cursor-not-allowed rounded-sm border border-stone-300 bg-stone-100/90 px-4 py-3.5 font-mono text-[14px] text-stone-400 placeholder:text-stone-400 placeholder:italic"
                   />
@@ -293,8 +300,8 @@ export function LandingPage() {
                     id="rightmove-url-hint"
                     className="text-[12px] leading-[1.65] text-stone-500"
                   >
-                    Link pasting is not available yet—see the sample below for the summary
-                    layout.
+                    You cannot paste a live link yet—that is intentional. Scroll to the
+                    sample summary to see the full layout today.
                   </p>
                 </div>
               </div>
@@ -302,31 +309,34 @@ export function LandingPage() {
 
             <div className="mt-8 border-t border-stone-200/80 pt-6 sm:mt-10 sm:pt-8">
               <p className="text-center text-[11px] font-medium uppercase tracking-[0.18em] text-stone-500">
-                By the numbers
+                What you can verify here
               </p>
-              <div className="mx-auto mt-8 grid max-w-3xl grid-cols-1 gap-10 sm:grid-cols-2 sm:gap-12 lg:max-w-4xl">
+              <div className="mx-auto mt-8 grid max-w-5xl grid-cols-1 gap-10 sm:grid-cols-3 sm:gap-10 lg:gap-12">
                 <div className="text-center sm:text-left">
-                  <p className="font-sans text-[clamp(2.25rem,5vw,3.25rem)] font-light tabular-nums leading-none tracking-tight text-stone-900">
-                    12,000+
-                  </p>
-                  <p className="mt-3 text-[13px] font-medium leading-snug text-stone-800">
-                    UK property deals analysed
+                  <p className="text-[13px] font-medium leading-snug text-stone-800">
+                    The sample summary
                   </p>
                   <p className="mt-2 text-[13px] leading-[1.75] text-stone-600">
-                    Cumulative listing screens run through the Brickly summary format—
-                    verdict, numbers, and risk flags—since we opened the beta.
+                    The worked example below shows the real layout—verdict block,
+                    numbers, area lines, and risk flags—using illustrative figures only.
                   </p>
                 </div>
                 <div className="text-center sm:text-left">
-                  <p className="font-sans text-[clamp(2.25rem,5vw,3.25rem)] font-light tabular-nums leading-none tracking-tight text-stone-900">
-                    3,200+
-                  </p>
-                  <p className="mt-3 text-[13px] font-medium leading-snug text-stone-800">
-                    Active users
+                  <p className="text-[13px] font-medium leading-snug text-stone-800">
+                    Built with investors
                   </p>
                   <p className="mt-2 text-[13px] leading-[1.75] text-stone-600">
-                    Buy-to-let investors, deal sourcers, and analysts using Brickly at
-                    least weekly—concentrated in England and Wales for now.
+                    Quotes in Stories are from beta users—roles and regions only, so you
+                    judge the substance, not a name on a logo wall.
+                  </p>
+                </div>
+                <div className="text-center sm:text-left">
+                  <p className="text-[13px] font-medium leading-snug text-stone-800">
+                    Narrow on purpose
+                  </p>
+                  <p className="mt-2 text-[13px] leading-[1.75] text-stone-600">
+                    A structured first read from a link—not underwriting, tax, or legal
+                    advice. Your solicitor and your own sums stay in charge.
                   </p>
                 </div>
               </div>
@@ -363,7 +373,7 @@ export function LandingPage() {
                 sectionId="example"
                 className="inline-flex w-full min-h-12 items-center justify-center rounded-sm bg-stone-900 px-8 py-3.5 text-center text-[11px] font-semibold uppercase tracking-[0.16em] text-white transition hover:bg-stone-800 sm:w-auto"
               >
-                View sample summary
+                Open the sample summary
               </ScrollLink>
             </div>
           </div>
@@ -420,14 +430,14 @@ export function LandingPage() {
                 id="why-brickly-heading"
                 className="mt-6 font-sans text-[clamp(1.35rem,2.2vw,1.85rem)] font-light leading-snug tracking-[-0.02em] text-stone-900"
               >
-                Why this deserves a serious look
+                Built for how UK investors actually screen deals
               </h2>
               <p className="mt-4 text-[15px] leading-relaxed text-stone-600">
-                UK rental investors still screen listings in browser tabs and ad hoc
-                spreadsheets. Generic chat tools give a different answer every time.
-                <BrandName /> is built for one job: a repeatable investor read from a
-                listing link—fast enough for a busy shortlist, structured enough to
-                compare two deals fairly.
+                Most people still juggle tabs and one-off spreadsheets. Generic chat
+                tools give a different layout every time you ask.
+                <BrandName /> does one job: turn a listing link into the same investor
+                read every time—quick enough for a busy shortlist, structured enough to
+                compare two deals without redoing the scaffolding.
               </p>
             </div>
             <div className="mx-auto mt-8 grid max-w-5xl gap-6 border-t border-stone-200/90 pt-8 md:grid-cols-3 md:gap-8 md:pt-10">
@@ -467,35 +477,14 @@ export function LandingPage() {
 
             <div className="mx-auto mt-8 max-w-5xl border border-stone-200/90 bg-stone-50/90 px-5 py-6 sm:px-8 sm:py-7">
               <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-stone-500">
-                Strategic snapshot
+                Where we are
               </p>
               <p className="mt-3 text-[13px] leading-relaxed text-stone-600">
-                Usage at the top of the page is the headline story: serious deal volume
-                and a concentrated user base in the UK rental investor segment.{" "}
-                <BrandName /> remains{" "}
+                <BrandName /> is{" "}
                 <span className="font-medium text-stone-800">pre-revenue</span> while we
-                refine pricing—growth first, monetisation next.
-              </p>
-              <div className="mt-6 grid gap-6 border-t border-stone-200/90 pt-6 sm:grid-cols-2 sm:gap-8">
-                <div>
-                  <p className="text-[13px] font-semibold text-stone-900">Thesis</p>
-                  <p className="mt-2 text-[13px] leading-relaxed text-stone-600">
-                    Rightmove-scale discovery is solved; investors still lack a standard
-                    first screen before spreadsheets and offers.
-                  </p>
-                </div>
-                <div>
-                  <p className="text-[13px] font-semibold text-stone-900">Traction</p>
-                  <p className="mt-2 text-[13px] leading-relaxed text-stone-600">
-                    Strong repeat usage on the same summary layout—teams report faster
-                    shortlists and fewer “bad” viewings booked from cold listings.
-                  </p>
-                </div>
-              </div>
-              <p className="mt-6 border-t border-stone-200/90 pt-6 text-[13px] leading-relaxed text-stone-600">
-                <span className="font-medium text-stone-900">Moat: </span>
-                Comparable layout and workflow embedded in daily screening—hard to
-                replicate with one-off chat prompts.
+                finish link pasting and settle pricing. The problem we care about is
+                simple: listings are easy to find—a comparable first screen before you
+                open a model still is not.
               </p>
             </div>
           </div>
@@ -517,9 +506,9 @@ export function LandingPage() {
               <span className="text-stone-800">Borderline</span>,{" "}
               <span className="text-stone-800">Overpriced</span>, or{" "}
               <span className="text-stone-800">High risk</span>, each with why, main
-              risk, and a sensible next step. With a real link,{" "}
-              <BrandName /> gives you the same layout every time—easy to compare two
-              deals side by side.
+              risk, and a sensible next step. When link paste is live,{" "}
+              <BrandName /> keeps that same structure for every URL—so two deals stay
+              comparable.
             </p>
             <div className="mx-auto mt-5 max-w-2xl border border-stone-200/90 bg-white/80 px-5 py-4 text-left sm:px-6">
               <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-stone-500">
@@ -742,8 +731,8 @@ export function LandingPage() {
                       What users say
                     </h2>
                     <p className="mt-4 text-[14px] leading-relaxed text-stone-600">
-                      From active investors and sourcers in our beta—anonymised roles and
-                      regions.
+                      From people in our beta—role and region only, no names, so you read
+                      for the detail, not the endorsement.
                     </p>
                   </div>
                   <div className="flex flex-col gap-5">
@@ -814,7 +803,7 @@ export function LandingPage() {
                 type="button"
                 aria-pressed={pricingPlan === "starter"}
                 id="pricing-tab-starter"
-                className={`min-h-11 flex-1 rounded-full px-4 text-[11px] font-semibold uppercase tracking-[0.14em] transition-colors ${
+                className={`min-h-11 flex-1 rounded-full px-4 text-[11px] font-semibold uppercase tracking-[0.14em] transition-colors ${FOCUS_RING} ${
                   pricingPlan === "starter"
                     ? "bg-white text-stone-900 shadow-sm"
                     : "text-stone-600 hover:text-stone-800"
@@ -827,7 +816,7 @@ export function LandingPage() {
                 type="button"
                 aria-pressed={pricingPlan === "pro"}
                 id="pricing-tab-pro"
-                className={`min-h-11 flex-1 rounded-full px-4 text-[11px] font-semibold uppercase tracking-[0.14em] transition-colors ${
+                className={`min-h-11 flex-1 rounded-full px-4 text-[11px] font-semibold uppercase tracking-[0.14em] transition-colors ${FOCUS_RING} ${
                   pricingPlan === "pro"
                     ? "bg-stone-900 text-white shadow-sm"
                     : "text-stone-600 hover:text-stone-800"
@@ -847,7 +836,7 @@ export function LandingPage() {
                 role="radio"
                 aria-checked={pricingPlan === "starter"}
                 tabIndex={0}
-                className={`flex flex-col rounded-2xl border bg-stone-50/50 p-8 outline-none transition-[box-shadow,opacity,border-color] sm:p-10 touch-manipulation ${
+                className={`flex flex-col rounded-2xl border bg-stone-50/50 p-8 outline-none transition-[box-shadow,opacity,border-color] sm:p-10 touch-manipulation ${FOCUS_RING} ${
                   pricingPlan === "starter"
                     ? "cursor-pointer border-stone-900 shadow-[0_12px_40px_-20px_rgba(28,25,23,0.35)] ring-2 ring-stone-900/25"
                     : "cursor-pointer border-stone-200/90 opacity-[0.72] hover:opacity-100"
@@ -889,11 +878,8 @@ export function LandingPage() {
                   <li>Same layout every time—easy to compare two deals</li>
                   <li>Help when you are stuck</li>
                 </ul>
-                <p
-                  className="mt-10 inline-flex min-h-12 w-full select-none items-center justify-center rounded-sm border border-stone-300 bg-white px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-stone-600"
-                  aria-hidden
-                >
-                  Coming soon
+                <p className="mt-10 inline-flex min-h-12 w-full select-none items-center justify-center rounded-sm border border-stone-300 bg-white px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-stone-600">
+                  Coming soon — not on sale yet
                 </p>
               </div>
 
@@ -901,7 +887,7 @@ export function LandingPage() {
                 role="radio"
                 aria-checked={pricingPlan === "pro"}
                 tabIndex={0}
-                className={`flex flex-col rounded-2xl border p-8 outline-none transition-[box-shadow,opacity,border-color] sm:p-10 touch-manipulation ${
+                className={`flex flex-col rounded-2xl border p-8 outline-none transition-[box-shadow,opacity,border-color] sm:p-10 touch-manipulation ${FOCUS_RING} ${
                   pricingPlan === "pro"
                     ? "cursor-pointer border-stone-900 bg-white shadow-[0_12px_40px_-20px_rgba(28,25,23,0.35)] ring-2 ring-stone-900/25"
                     : "cursor-pointer border-stone-200/90 bg-stone-50/40 opacity-[0.72] hover:opacity-100"
@@ -949,9 +935,8 @@ export function LandingPage() {
                       ? "bg-stone-900 text-white"
                       : "border border-stone-300 bg-white text-stone-600"
                   }`}
-                  aria-hidden
                 >
-                  Coming soon
+                  Coming soon — not on sale yet
                 </p>
               </div>
             </div>
@@ -965,15 +950,16 @@ export function LandingPage() {
         >
           <div className={`mx-auto max-w-[960px] ${PANEL} px-6 py-8 text-center sm:px-10 sm:py-10`}>
             <p className="mx-auto max-w-lg text-[15px] leading-relaxed text-stone-600">
-              Paste a Rightmove link into <BrandName /> when you want that first read—then
-              take your time on the serious sums in your own sheet.
+              When link paste ships, that is the fastest way in. Until then, the sample
+              below is the clearest picture of what <BrandName /> is building—no email
+              required.
             </p>
             <div className="mt-6 flex flex-col items-stretch justify-center sm:flex-row sm:justify-center">
               <ScrollLink
                 sectionId="example"
                 className="inline-flex min-h-12 items-center justify-center rounded-sm bg-stone-900 px-10 py-3.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-white transition hover:bg-stone-800"
               >
-                View sample summary
+                Open the sample summary
               </ScrollLink>
             </div>
           </div>
@@ -987,9 +973,8 @@ export function LandingPage() {
               <BrandName className="text-[15px]" />
             </p>
             <p className="mt-3 max-w-sm text-[14px] leading-relaxed text-stone-600">
-              <BrandName /> turns a Rightmove link into a quick, comparable summary—a
-              first pass before your own serious sums. Not financial, tax, or legal
-              advice.
+              <BrandName /> is for a quick, comparable read from a listing link—before you
+              commit time to a full model. Not financial, tax, or legal advice.
             </p>
             <p className="mt-4 max-w-sm text-[12px] leading-relaxed text-stone-500">
               Built in the UK · Pre-launch
