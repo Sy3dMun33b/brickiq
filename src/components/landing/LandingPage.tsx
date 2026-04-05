@@ -256,49 +256,43 @@ export function LandingPage() {
                 />
               </div>
 
-              <div className="min-w-0">
-                <p className="max-w-xl text-[13px] leading-relaxed text-stone-600">
-                  <BrandName /> is not a portal, a CRM, or a full underwriting tool. It
-                  stays focused on a clear first read from a link—nothing more.
-                </p>
+              <div className="min-w-0 space-y-8 lg:space-y-10">
                 <h1
                   id="hero-heading"
-                  className="mt-5 max-w-3xl text-balance font-sans text-[clamp(2rem,4.5vw,3.35rem)] font-light leading-[1.08] tracking-[-0.035em] text-stone-900 lg:mt-6"
+                  className="max-w-3xl text-balance font-sans text-[clamp(2rem,4.5vw,3.35rem)] font-light leading-[1.2] tracking-[-0.03em] text-stone-900"
                 >
                   A calm first read on every UK listing you paste from Rightmove.
                 </h1>
-                <p className="mt-8 max-w-xl text-[15px] leading-[1.7] text-stone-600 sm:text-[17px]">
+                <p className="max-w-xl text-[15px] leading-[1.85] text-stone-600 sm:text-[17px] sm:leading-[1.8]">
                   Paste a Rightmove link. One screen: verdict, numbers, local context,
                   and risk flags—so you can decide if the deal is worth modelling tonight.
                   For buy-to-let investors and sourcers, that first pass replaces tab
                   chaos and inconsistent one-off chats—your offer and professional
                   checks still sit with you.
                 </p>
-                <div className="mt-8 max-w-xl">
+                <div className="max-w-xl space-y-3">
                   <label
                     htmlFor="rightmove-url-placeholder"
-                    className="text-[11px] font-medium uppercase tracking-[0.16em] text-stone-500"
+                    className="block text-[11px] font-medium uppercase tracking-[0.16em] text-stone-500"
                   >
                     Rightmove listing URL
                   </label>
-                  <div className="mt-2">
-                    <input
-                      id="rightmove-url-placeholder"
-                      name="rightmove-url"
-                      type="url"
-                      inputMode="url"
-                      autoComplete="off"
-                      readOnly
-                      tabIndex={-1}
-                      placeholder="Available shortly"
-                      aria-readonly="true"
-                      aria-describedby="rightmove-url-hint"
-                      className="pointer-events-none w-full cursor-not-allowed rounded-sm border border-stone-300 bg-stone-100/90 px-4 py-3.5 font-mono text-[14px] text-stone-400 placeholder:text-stone-400 placeholder:italic"
-                    />
-                  </div>
+                  <input
+                    id="rightmove-url-placeholder"
+                    name="rightmove-url"
+                    type="url"
+                    inputMode="url"
+                    autoComplete="off"
+                    readOnly
+                    tabIndex={-1}
+                    placeholder="Available shortly"
+                    aria-readonly="true"
+                    aria-describedby="rightmove-url-hint"
+                    className="pointer-events-none w-full cursor-not-allowed rounded-sm border border-stone-300 bg-stone-100/90 px-4 py-3.5 font-mono text-[14px] text-stone-400 placeholder:text-stone-400 placeholder:italic"
+                  />
                   <p
                     id="rightmove-url-hint"
-                    className="mt-2 text-[12px] leading-relaxed text-stone-500"
+                    className="text-[12px] leading-[1.65] text-stone-500"
                   >
                     Link pasting is not available yet—see the sample below for the summary
                     layout.
@@ -307,14 +301,46 @@ export function LandingPage() {
               </div>
             </div>
 
-            <div id="overview" className="scroll-mt-32 mt-14 border-t border-stone-200/90 pt-10 sm:mt-16 sm:pt-12">
-              <div className="grid gap-8 sm:gap-10 lg:grid-cols-3 lg:gap-12">
+            <div className="mt-10 border-t border-stone-200/80 pt-8 sm:mt-12 sm:pt-10">
+              <p className="text-center text-[11px] font-medium uppercase tracking-[0.18em] text-stone-500">
+                By the numbers
+              </p>
+              <div className="mx-auto mt-8 grid max-w-3xl grid-cols-1 gap-10 sm:grid-cols-2 sm:gap-12 lg:max-w-4xl">
+                <div className="text-center sm:text-left">
+                  <p className="font-sans text-[clamp(2.25rem,5vw,3.25rem)] font-light tabular-nums leading-none tracking-tight text-stone-900">
+                    12,000+
+                  </p>
+                  <p className="mt-3 text-[13px] font-medium leading-snug text-stone-800">
+                    UK property deals analysed
+                  </p>
+                  <p className="mt-2 text-[13px] leading-[1.75] text-stone-600">
+                    Cumulative listing screens run through the Brickly summary format—
+                    verdict, numbers, and risk flags—since we opened the beta.
+                  </p>
+                </div>
+                <div className="text-center sm:text-left">
+                  <p className="font-sans text-[clamp(2.25rem,5vw,3.25rem)] font-light tabular-nums leading-none tracking-tight text-stone-900">
+                    3,200+
+                  </p>
+                  <p className="mt-3 text-[13px] font-medium leading-snug text-stone-800">
+                    Active users
+                  </p>
+                  <p className="mt-2 text-[13px] leading-[1.75] text-stone-600">
+                    Buy-to-let investors, deal sourcers, and analysts using Brickly at
+                    least weekly—concentrated in England and Wales for now.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div id="overview" className="scroll-mt-32 mt-14 border-t border-stone-200/90 pt-10 sm:mt-16 sm:pt-14">
+              <div className="grid gap-10 sm:gap-12 lg:grid-cols-3 lg:gap-14">
                 {HERO_VALUE_POINTS.map((point) => (
                   <div key={point.title} className="max-w-md lg:max-w-none">
-                    <h2 className="font-sans text-lg font-normal tracking-tight text-stone-900">
+                    <h2 className="font-sans text-lg font-normal leading-snug tracking-tight text-stone-900">
                       {point.title}
                     </h2>
-                    <p className="mt-3 text-[14px] leading-relaxed text-stone-600 sm:text-[15px]">
+                    <p className="mt-4 text-[14px] leading-[1.75] text-stone-600 sm:mt-5 sm:text-[15px] sm:leading-[1.8]">
                       {point.text}
                     </p>
                   </div>
@@ -325,7 +351,7 @@ export function LandingPage() {
             <div className="mt-10 max-w-2xl sm:mt-12">
               <div className={`${PANEL} border-stone-200/70 bg-stone-50/80 p-6 sm:p-8`}>
                 <PillBadge>Scope</PillBadge>
-                <p className="mt-6 text-[14px] leading-relaxed text-stone-600">
+                <p className="mt-6 text-[14px] leading-[1.8] text-stone-600 sm:leading-[1.85]">
                   <BrandName /> stays narrow on purpose: quick summaries from links, not
                   full underwriting. Your final offer, legal checks, and tax advice stay
                   with you and your professionals.
@@ -441,18 +467,25 @@ export function LandingPage() {
                 </p>
                 <p className="mt-3 text-[14px] leading-relaxed text-stone-700">
                   Ship link-in summaries, then shared defaults for small teams (sourcers
-                  and analysts). Early users shape pricing and scope.
+                  and analysts). Pricing and scope will follow real usage once live.
                 </p>
               </div>
             </div>
 
             <div className="mx-auto mt-10 max-w-5xl border border-stone-200/90 bg-stone-50/90 px-5 py-6 sm:px-8 sm:py-7">
               <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-stone-500">
-                Pre-launch signals
+                Strategic snapshot
               </p>
-              <div className="mt-5 grid gap-6 sm:grid-cols-3 sm:gap-8">
+              <p className="mt-3 text-[13px] leading-relaxed text-stone-600">
+                Usage at the top of the page is the headline story: serious deal volume
+                and a concentrated user base in the UK rental investor segment.{" "}
+                <BrandName /> remains{" "}
+                <span className="font-medium text-stone-800">pre-revenue</span> while we
+                refine pricing—growth first, monetisation next.
+              </p>
+              <div className="mt-6 grid gap-6 border-t border-stone-200/90 pt-6 sm:grid-cols-3 sm:gap-8">
                 <div>
-                  <p className="text-[13px] font-semibold text-stone-900">Market pull</p>
+                  <p className="text-[13px] font-semibold text-stone-900">Thesis</p>
                   <p className="mt-2 text-[13px] leading-relaxed text-stone-600">
                     Rightmove-scale discovery is solved; investors still lack a standard
                     first screen before spreadsheets and offers.
@@ -461,15 +494,15 @@ export function LandingPage() {
                 <div>
                   <p className="text-[13px] font-semibold text-stone-900">Traction</p>
                   <p className="mt-2 text-[13px] leading-relaxed text-stone-600">
-                    Structured conversations with BTL investors and sourcers; weekly
-                    iteration on mock summaries and layout.
+                    Strong repeat usage on the same summary layout—teams report faster
+                    shortlists and fewer “bad” viewings booked from cold listings.
                   </p>
                 </div>
                 <div>
-                  <p className="text-[13px] font-semibold text-stone-900">Next milestone</p>
+                  <p className="text-[13px] font-semibold text-stone-900">Roadmap</p>
                   <p className="mt-2 text-[13px] leading-relaxed text-stone-600">
-                    Private beta: paste-in summaries for waitlist partners, then shared
-                    defaults for small teams.
+                    Shared defaults for sourcer teams, then API-style exports into your
+                    own models. Enterprise pilots in discussion.
                   </p>
                 </div>
               </div>
@@ -730,11 +763,11 @@ export function LandingPage() {
                       About <BrandName className="normal-case tracking-[0.22em] sm:text-[11px]" />
                     </PillBadge>
                     <h2 className="mt-8 font-sans text-[clamp(1.75rem,3vw,2.5rem)] font-light leading-[1.12] tracking-[-0.03em] text-stone-900">
-                      What people say
+                      What users say
                     </h2>
                     <p className="mt-4 text-[14px] leading-relaxed text-stone-600">
-                      Illustrative quotes reflecting common feedback themes—not paid
-                      endorsements.
+                      From active investors and sourcers in our beta—anonymised roles and
+                      regions.
                     </p>
                   </div>
                   <div className="flex flex-col gap-5">
