@@ -21,9 +21,9 @@ const siteUrl =
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "Brickly | Quick checks on UK property deals",
+  title: "Brickly | Investor-style summaries from Rightmove links",
   description:
-    "Paste a Rightmove link. Get a short summary—profit, what to watch, and a simple score—before you open a full spreadsheet.",
+    "UK property: paste a Rightmove link for a consistent first read—verdict, numbers, area context, and risk flags. For buy-to-let investors and sourcers. Pre-launch.",
   keywords: [
     "Brickly",
     "UK property",
@@ -36,9 +36,9 @@ export const metadata: Metadata = {
   creator: "Brickly",
   publisher: "Brickly",
   openGraph: {
-    title: "Brickly | Quick checks on UK property deals",
+    title: "Brickly | Investor-style summaries from Rightmove links",
     description:
-      "Summaries for people who want a faster, clearer first look at each listing.",
+      "A calm first read on every listing—structured like an investor memo, not a chat thread.",
     url: siteUrl,
     siteName: "Brickly",
     images: [
@@ -54,9 +54,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Brickly | Quick checks on UK property deals",
+    title: "Brickly | Investor-style summaries from Rightmove links",
     description:
-      "Paste a Rightmove link. Warnings, profit line, and a simple score—in one place.",
+      "Verdict, numbers, and risk flags from a listing URL—before you model the deal.",
     images: ["/og-image.png"],
   },
   robots: {
