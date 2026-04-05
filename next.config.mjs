@@ -23,10 +23,12 @@ const nextConfig = {
             value: "max-age=63072000; includeSubDomains; preload",
           },
           {
+            /* Next.js requires script-src unsafe-inline + unsafe-eval for hydration and chunks.
+               script-src 'self' only blocks client JS — page looks fine but nothing is interactive. */
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: blob: https://images.unsplash.com",
               "font-src 'self'",

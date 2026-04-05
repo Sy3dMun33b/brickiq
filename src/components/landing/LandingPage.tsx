@@ -1,6 +1,6 @@
 "use client";
 
-import type { ComponentProps, MouseEvent, ReactNode } from "react";
+import { useState, type ComponentProps, type MouseEvent, type ReactNode } from "react";
 import Image from "next/image";
 
 const navItems = [
@@ -11,8 +11,8 @@ const navItems = [
   { id: "pricing" as const, label: "Pricing" },
 ] as const;
 
-const SECTION_PAD = "py-20 md:py-28 lg:py-36";
-const SCROLL_MT = "scroll-mt-28 md:scroll-mt-32";
+const SECTION_PAD = "py-12 md:py-16 lg:py-20";
+const SCROLL_MT = "scroll-mt-24 md:scroll-mt-28";
 const PANEL = "rounded-[1.75rem] border border-stone-200/90 bg-white md:rounded-[2rem]";
 
 function scrollToSection(id: string) {
@@ -88,16 +88,13 @@ const PROPERTY_IMAGES = {
     },
     {
       src: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1600&q=85",
-      alt: "Warm contemporary sitting room with natural light",
+      alt: "Warm sitting room with natural light",
     },
     {
       src: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1600&q=85",
       alt: "Modern home with pool and evening sky",
     },
   ],
-  panorama:
-    "https://images.unsplash.com/photo-1600585152914-d0bec010a4f8?auto=format&fit=crop&w=2400&q=85",
-  panoramaAlt: "Contemporary house exterior at dusk with warm lighting",
 } as const;
 
 /** Hero value columns—what Brickly focuses on. */
@@ -199,6 +196,8 @@ const SAMPLE_RISK_FLAGS = [
 ] as const;
 
 export function LandingPage() {
+  const [pricingPlan, setPricingPlan] = useState<"starter" | "pro">("starter");
+
   return (
     <div className="min-h-screen min-w-0 overflow-x-hidden bg-[#ebeae8] text-stone-900 antialiased">
       <header className="fixed inset-x-0 top-0 z-50 border-b border-stone-300/50 bg-[#ebeae8]/90 backdrop-blur-md">
@@ -231,7 +230,7 @@ export function LandingPage() {
         {/* 1. Hero */}
         <section
           id="hero"
-          className={`${SCROLL_MT} px-4 pb-8 pt-20 sm:px-6 sm:pb-12 sm:pt-24 md:px-8 lg:px-10`}
+          className={`${SCROLL_MT} px-4 pb-6 pt-14 sm:px-6 sm:pb-10 sm:pt-20 md:px-8 lg:px-10`}
           aria-labelledby="hero-heading"
         >
           <div
@@ -245,7 +244,7 @@ export function LandingPage() {
             </div>
 
             <div className="grid gap-10 lg:grid-cols-2 lg:items-center lg:gap-12 xl:gap-14">
-              <div className="relative min-h-[240px] w-full overflow-hidden rounded-2xl border border-stone-200/80 bg-stone-200 shadow-[0_20px_50px_-20px_rgba(28,25,23,0.28)] sm:min-h-[300px] lg:min-h-0 lg:aspect-[5/6] lg:max-h-[min(520px,58vh)]">
+              <div className="relative w-full overflow-hidden rounded-2xl border border-stone-200/80 bg-stone-200 shadow-[0_20px_50px_-20px_rgba(28,25,23,0.28)] aspect-[4/3] sm:aspect-[3/2] lg:aspect-[8/5]">
                 <Image
                   src={PROPERTY_IMAGES.hero}
                   alt="Scenic modern family home with garden and clear sky"
@@ -301,7 +300,7 @@ export function LandingPage() {
               </div>
             </div>
 
-            <div className="mt-10 border-t border-stone-200/80 pt-8 sm:mt-12 sm:pt-10">
+            <div className="mt-8 border-t border-stone-200/80 pt-6 sm:mt-10 sm:pt-8">
               <p className="text-center text-[11px] font-medium uppercase tracking-[0.18em] text-stone-500">
                 By the numbers
               </p>
@@ -333,7 +332,7 @@ export function LandingPage() {
               </div>
             </div>
 
-            <div id="overview" className="scroll-mt-32 mt-14 border-t border-stone-200/90 pt-10 sm:mt-16 sm:pt-14">
+            <div id="overview" className="scroll-mt-28 mt-10 border-t border-stone-200/90 pt-8 sm:mt-12 sm:pt-10">
               <div className="grid gap-10 sm:gap-12 lg:grid-cols-3 lg:gap-14">
                 {HERO_VALUE_POINTS.map((point) => (
                   <div key={point.title} className="max-w-md lg:max-w-none">
@@ -359,16 +358,13 @@ export function LandingPage() {
               </div>
             </div>
 
-            <div className="mt-12 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-8">
+            <div className="mt-12">
               <ScrollLink
                 sectionId="example"
                 className="inline-flex w-full min-h-12 items-center justify-center rounded-sm bg-stone-900 px-8 py-3.5 text-center text-[11px] font-semibold uppercase tracking-[0.16em] text-white transition hover:bg-stone-800 sm:w-auto"
               >
                 View sample summary
               </ScrollLink>
-              <p className="max-w-md text-[13px] leading-relaxed text-stone-500">
-                Illustrative previews only—we do not load live listings in this demo.
-              </p>
             </div>
           </div>
         </section>
@@ -376,7 +372,7 @@ export function LandingPage() {
         {/* Scenic strip — memorable illustrative homes (stock photography) */}
         <section
           aria-label="Illustrative UK homes"
-          className="px-4 pb-14 pt-4 sm:px-6 sm:pb-16 md:px-8 lg:px-10"
+          className="px-4 pb-8 pt-2 sm:px-6 sm:pb-10 md:px-8 lg:px-10"
         >
           <div className="mx-auto max-w-[1600px]">
             <div className="grid gap-3 md:h-[min(26rem,52vh)] md:grid-cols-2 md:grid-rows-2 md:gap-4">
@@ -408,16 +404,13 @@ export function LandingPage() {
                 />
               </div>
             </div>
-            <p className="mt-4 text-center text-[12px] leading-relaxed text-stone-500">
-              Illustrative homes—stock photography for atmosphere, not live listings.
-            </p>
           </div>
         </section>
 
         {/* Investment case */}
         <section
           id="why-brickly"
-          className={`${SCROLL_MT} px-4 pb-12 pt-2 sm:px-6 md:px-8 md:pb-16 lg:px-10`}
+          className={`${SCROLL_MT} px-4 pb-8 pt-2 sm:px-6 md:px-8 md:pb-10 lg:px-10`}
           aria-labelledby="why-brickly-heading"
         >
           <div className={`mx-auto max-w-[1600px] ${PANEL} p-6 sm:p-10 md:p-12 lg:p-14`}>
@@ -437,7 +430,7 @@ export function LandingPage() {
                 compare two deals fairly.
               </p>
             </div>
-            <div className="mx-auto mt-12 grid max-w-5xl gap-8 border-t border-stone-200/90 pt-10 md:grid-cols-3 md:gap-10 md:pt-12">
+            <div className="mx-auto mt-8 grid max-w-5xl gap-6 border-t border-stone-200/90 pt-8 md:grid-cols-3 md:gap-8 md:pt-10">
               <div>
                 <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-stone-500">
                   Why now
@@ -472,7 +465,7 @@ export function LandingPage() {
               </div>
             </div>
 
-            <div className="mx-auto mt-10 max-w-5xl border border-stone-200/90 bg-stone-50/90 px-5 py-6 sm:px-8 sm:py-7">
+            <div className="mx-auto mt-8 max-w-5xl border border-stone-200/90 bg-stone-50/90 px-5 py-6 sm:px-8 sm:py-7">
               <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-stone-500">
                 Strategic snapshot
               </p>
@@ -483,7 +476,7 @@ export function LandingPage() {
                 <span className="font-medium text-stone-800">pre-revenue</span> while we
                 refine pricing—growth first, monetisation next.
               </p>
-              <div className="mt-6 grid gap-6 border-t border-stone-200/90 pt-6 sm:grid-cols-3 sm:gap-8">
+              <div className="mt-6 grid gap-6 border-t border-stone-200/90 pt-6 sm:grid-cols-2 sm:gap-8">
                 <div>
                   <p className="text-[13px] font-semibold text-stone-900">Thesis</p>
                   <p className="mt-2 text-[13px] leading-relaxed text-stone-600">
@@ -498,22 +491,11 @@ export function LandingPage() {
                     shortlists and fewer “bad” viewings booked from cold listings.
                   </p>
                 </div>
-                <div>
-                  <p className="text-[13px] font-semibold text-stone-900">Roadmap</p>
-                  <p className="mt-2 text-[13px] leading-relaxed text-stone-600">
-                    Shared defaults for sourcer teams, then API-style exports into your
-                    own models. Enterprise pilots in discussion.
-                  </p>
-                </div>
               </div>
               <p className="mt-6 border-t border-stone-200/90 pt-6 text-[13px] leading-relaxed text-stone-600">
                 <span className="font-medium text-stone-900">Moat: </span>
                 Comparable layout and workflow embedded in daily screening—hard to
                 replicate with one-off chat prompts.
-              </p>
-              <p className="mt-3 text-[12px] leading-relaxed text-stone-500">
-                Team: UK buy-to-let domain + product; shipping with tight scope and
-                underwriting-aware disclaimers.
               </p>
             </div>
           </div>
@@ -526,7 +508,7 @@ export function LandingPage() {
         >
           <div className="mx-auto max-w-[720px] text-center lg:max-w-[880px]">
             <PillBadge>Sample summary</PillBadge>
-            <h2 className="mt-8 font-sans text-[clamp(1.5rem,2.5vw,2.1rem)] font-light leading-snug tracking-[-0.02em] text-stone-900">
+            <h2 className="mt-5 font-sans text-[clamp(1.5rem,2.5vw,2.1rem)] font-light leading-snug tracking-[-0.02em] text-stone-900">
               What one <BrandName /> summary looks like
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-stone-600">
@@ -539,7 +521,7 @@ export function LandingPage() {
               <BrandName /> gives you the same layout every time—easy to compare two
               deals side by side.
             </p>
-            <div className="mx-auto mt-8 max-w-2xl border border-stone-200/90 bg-white/80 px-5 py-4 text-left sm:px-6">
+            <div className="mx-auto mt-5 max-w-2xl border border-stone-200/90 bg-white/80 px-5 py-4 text-left sm:px-6">
               <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-stone-500">
                 Why the summary is useful
               </p>
@@ -566,7 +548,7 @@ export function LandingPage() {
             </div>
           </div>
 
-          <div className="mx-auto mt-12 max-w-5xl">
+          <div className="mx-auto mt-8 max-w-5xl">
             <div className="overflow-hidden rounded-2xl border border-stone-200/90 bg-white shadow-[0_1px_0_0_rgba(15,23,42,0.06)]">
               {/* Listing + score — quick anchor */}
               <div className="border-b border-stone-100 px-5 py-6 sm:px-8 sm:py-7">
@@ -734,10 +716,6 @@ export function LandingPage() {
                 </p>
               </div>
             </div>
-            <p className="mt-6 text-center text-[13px] leading-relaxed text-stone-500">
-              Illustrative preview. Uses numbers you enter alongside the advert. Not
-              financial advice.
-            </p>
           </div>
         </section>
 
@@ -748,7 +726,7 @@ export function LandingPage() {
         >
           <div className="mx-auto max-w-[1600px]">
             <div className="relative overflow-hidden rounded-[1.75rem] border border-stone-200/90 bg-stone-300 md:rounded-[2rem]">
-              <div className="relative min-h-[520px] lg:min-h-[480px]">
+              <div className="relative min-h-0">
                 <Image
                   src={PROPERTY_IMAGES.storiesBg}
                   alt=""
@@ -757,12 +735,10 @@ export function LandingPage() {
                   sizes="100vw"
                 />
                 <div className="absolute inset-0 bg-[#f4f3f1]/82" aria-hidden />
-                <div className="relative grid gap-12 p-8 sm:p-12 lg:min-h-[480px] lg:grid-cols-2 lg:items-center lg:gap-16 lg:p-16">
+                <div className="relative grid gap-8 p-6 sm:p-8 lg:grid-cols-2 lg:items-center lg:gap-12 lg:p-10">
                   <div className="max-w-md">
-                    <PillBadge>
-                      About <BrandName className="normal-case tracking-[0.22em] sm:text-[11px]" />
-                    </PillBadge>
-                    <h2 className="mt-8 font-sans text-[clamp(1.75rem,3vw,2.5rem)] font-light leading-[1.12] tracking-[-0.03em] text-stone-900">
+                    <PillBadge>Stories</PillBadge>
+                    <h2 className="mt-5 font-sans text-[clamp(1.75rem,3vw,2.5rem)] font-light leading-[1.12] tracking-[-0.03em] text-stone-900">
                       What users say
                     </h2>
                     <p className="mt-4 text-[14px] leading-relaxed text-stone-600">
@@ -817,26 +793,10 @@ export function LandingPage() {
           id="pricing"
           className={`${SCROLL_MT} ${SECTION_PAD} px-4 sm:px-6 md:px-8 lg:px-10`}
         >
-          <div className="mx-auto max-w-[1600px]">
-            <div className="relative mb-10 h-44 overflow-hidden rounded-[1.75rem] border border-stone-200/90 shadow-[0_24px_60px_-28px_rgba(28,25,23,0.45)] sm:mb-12 sm:h-52 md:mb-14 md:h-60 md:rounded-[2rem]">
-              <Image
-                src={PROPERTY_IMAGES.panorama}
-                alt={PROPERTY_IMAGES.panoramaAlt}
-                fill
-                className="object-cover object-[center_30%]"
-                sizes="(max-width:1600px) 100vw, 1600px"
-                loading="lazy"
-              />
-              <div
-                className="absolute inset-0 bg-gradient-to-t from-stone-900/35 via-stone-900/5 to-transparent"
-                aria-hidden
-              />
-            </div>
-          </div>
-          <div className={`mx-auto max-w-[1600px] ${PANEL} p-6 sm:p-10 md:p-14 lg:p-16`}>
+          <div className={`mx-auto max-w-[1600px] ${PANEL} p-6 sm:p-8 md:p-10 lg:p-12`}>
             <div className="mx-auto max-w-2xl text-center">
               <PillBadge>Pricing</PillBadge>
-              <h2 className="mt-8 font-sans text-[clamp(1.75rem,2.8vw,2.35rem)] font-light tracking-[-0.02em] text-stone-900">
+              <h2 className="mt-5 font-sans text-[clamp(1.75rem,2.8vw,2.35rem)] font-light tracking-[-0.02em] text-stone-900">
                 Pay for how often you use <BrandName />
               </h2>
               <p className="mt-4 text-[15px] leading-relaxed text-stone-600">
@@ -845,8 +805,65 @@ export function LandingPage() {
                 retyping.
               </p>
             </div>
-            <div className="mx-auto mt-14 grid max-w-4xl gap-8 lg:grid-cols-2 lg:gap-10">
-              <div className="flex flex-col rounded-2xl border border-stone-200/90 bg-stone-50/50 p-8 sm:p-10">
+            <div
+              className="mx-auto mt-8 flex max-w-md justify-center gap-1 rounded-full border border-stone-200/90 bg-stone-100/90 p-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.6)]"
+              role="group"
+              aria-label="Choose plan"
+            >
+              <button
+                type="button"
+                aria-pressed={pricingPlan === "starter"}
+                id="pricing-tab-starter"
+                className={`min-h-11 flex-1 rounded-full px-4 text-[11px] font-semibold uppercase tracking-[0.14em] transition-colors ${
+                  pricingPlan === "starter"
+                    ? "bg-white text-stone-900 shadow-sm"
+                    : "text-stone-600 hover:text-stone-800"
+                }`}
+                onClick={() => setPricingPlan("starter")}
+              >
+                Starter
+              </button>
+              <button
+                type="button"
+                aria-pressed={pricingPlan === "pro"}
+                id="pricing-tab-pro"
+                className={`min-h-11 flex-1 rounded-full px-4 text-[11px] font-semibold uppercase tracking-[0.14em] transition-colors ${
+                  pricingPlan === "pro"
+                    ? "bg-stone-900 text-white shadow-sm"
+                    : "text-stone-600 hover:text-stone-800"
+                }`}
+                onClick={() => setPricingPlan("pro")}
+              >
+                Pro
+              </button>
+            </div>
+
+            <div
+              className="mx-auto mt-8 grid max-w-4xl gap-6 lg:grid-cols-2 lg:gap-8"
+              role="radiogroup"
+              aria-label="Starter or Pro plan"
+            >
+              <div
+                role="radio"
+                aria-checked={pricingPlan === "starter"}
+                tabIndex={0}
+                className={`flex flex-col rounded-2xl border bg-stone-50/50 p-8 outline-none transition-[box-shadow,opacity,border-color] sm:p-10 touch-manipulation ${
+                  pricingPlan === "starter"
+                    ? "cursor-pointer border-stone-900 shadow-[0_12px_40px_-20px_rgba(28,25,23,0.35)] ring-2 ring-stone-900/25"
+                    : "cursor-pointer border-stone-200/90 opacity-[0.72] hover:opacity-100"
+                }`}
+                onClick={() => setPricingPlan("starter")}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setPricingPlan("starter");
+                  }
+                  if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+                    e.preventDefault();
+                    setPricingPlan("pro");
+                  }
+                }}
+              >
                 <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-stone-500">
                   Starter
                 </p>
@@ -873,14 +890,34 @@ export function LandingPage() {
                   <li>Help when you are stuck</li>
                 </ul>
                 <p
-                  className="mt-10 inline-flex min-h-12 w-full cursor-default items-center justify-center rounded-sm border border-stone-300 bg-white px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-stone-600"
-                  aria-label="Starter plan coming soon"
+                  className="mt-10 inline-flex min-h-12 w-full select-none items-center justify-center rounded-sm border border-stone-300 bg-white px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-stone-600"
+                  aria-hidden
                 >
                   Coming soon
                 </p>
               </div>
 
-              <div className="flex flex-col rounded-2xl border border-stone-900 bg-white p-8 sm:p-10">
+              <div
+                role="radio"
+                aria-checked={pricingPlan === "pro"}
+                tabIndex={0}
+                className={`flex flex-col rounded-2xl border p-8 outline-none transition-[box-shadow,opacity,border-color] sm:p-10 touch-manipulation ${
+                  pricingPlan === "pro"
+                    ? "cursor-pointer border-stone-900 bg-white shadow-[0_12px_40px_-20px_rgba(28,25,23,0.35)] ring-2 ring-stone-900/25"
+                    : "cursor-pointer border-stone-200/90 bg-stone-50/40 opacity-[0.72] hover:opacity-100"
+                }`}
+                onClick={() => setPricingPlan("pro")}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setPricingPlan("pro");
+                  }
+                  if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+                    e.preventDefault();
+                    setPricingPlan("starter");
+                  }
+                }}
+              >
                 <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-stone-500">
                   Pro
                 </p>
@@ -908,8 +945,12 @@ export function LandingPage() {
                   <li>Priority help when something breaks</li>
                 </ul>
                 <p
-                  className="mt-10 inline-flex min-h-12 w-full cursor-default items-center justify-center rounded-sm bg-stone-900 px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-white"
-                  aria-label="Pro plan coming soon"
+                  className={`mt-10 inline-flex min-h-12 w-full select-none items-center justify-center rounded-sm px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.14em] ${
+                    pricingPlan === "pro"
+                      ? "bg-stone-900 text-white"
+                      : "border border-stone-300 bg-white text-stone-600"
+                  }`}
+                  aria-hidden
                 >
                   Coming soon
                 </p>
@@ -921,17 +962,14 @@ export function LandingPage() {
         {/* Final CTA */}
         <section
           id="cta"
-          className={`${SCROLL_MT} border-t border-stone-300/60 bg-[#e4e3e1] px-4 py-20 sm:px-6 md:px-8 lg:px-10 lg:py-28`}
+          className={`${SCROLL_MT} border-t border-stone-300/60 bg-[#e4e3e1] px-4 py-12 sm:px-6 md:px-8 lg:px-10 lg:py-16`}
         >
-          <div className={`mx-auto max-w-[960px] ${PANEL} px-8 py-12 text-center sm:px-14 sm:py-16`}>
-            <h2 className="font-sans text-[clamp(1.5rem,2.8vw,2.15rem)] font-light leading-snug tracking-[-0.02em] text-stone-900">
-              <BrandName />: fast pass, fair compare, plain signal—same focus every time.
-            </h2>
-            <p className="mx-auto mt-6 max-w-lg text-[15px] leading-relaxed text-stone-600">
+          <div className={`mx-auto max-w-[960px] ${PANEL} px-6 py-8 text-center sm:px-10 sm:py-10`}>
+            <p className="mx-auto max-w-lg text-[15px] leading-relaxed text-stone-600">
               Paste a Rightmove link into <BrandName /> when you want that first read—then
               take your time on the serious sums in your own sheet.
             </p>
-            <div className="mt-10 flex flex-col items-stretch justify-center sm:flex-row sm:justify-center">
+            <div className="mt-6 flex flex-col items-stretch justify-center sm:flex-row sm:justify-center">
               <ScrollLink
                 sectionId="example"
                 className="inline-flex min-h-12 items-center justify-center rounded-sm bg-stone-900 px-10 py-3.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-white transition hover:bg-stone-800"
@@ -943,7 +981,7 @@ export function LandingPage() {
         </section>
       </main>
 
-      <footer className="border-t border-stone-300/60 bg-[#ebeae8] px-4 py-14 sm:px-8">
+      <footer className="border-t border-stone-300/60 bg-[#ebeae8] px-4 py-10 sm:px-8">
         <div className="mx-auto flex max-w-[1600px] flex-col gap-10 md:flex-row md:items-start md:justify-between">
           <div>
             <p className="text-[15px] tracking-[-0.02em] text-stone-900">

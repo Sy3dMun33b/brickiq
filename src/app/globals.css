@@ -2,6 +2,8 @@
 
 html {
   overflow-x: clip;
+  /* Fixed header: keep in-page anchors (#pricing, etc.) from landing under the bar */
+  scroll-padding-top: 4.5rem;
 }
 
 /* Focus styles */
